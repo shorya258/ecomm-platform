@@ -2,34 +2,42 @@
 import React from "react";
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 const login = () => {
+  const router = useRouter();
   const [credentials, setCredentials] = useState({
     email: "",
     password: "",
     role: "",
   });
-  const [selectedRole, setSelectedRole]= useState("");
   const onSubmit = async (e) => {
     e.preventDefault();
-    const response = await fetch(`http://localhost:5000/api/signup`, {
+    const response = await fetch(`/api/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        name: credentials.name,
         email: credentials.email,
         password: credentials.password,
       }),
     });
     const json = await response.json();
-    if (!json.success) {
-      toast.error("enter valid credentials");
-    } else {
-      toast.success("Sign up successful!");
-      props.handleIsSigninChange();
+    // console.log(json.authToken)
+    let authStorageToken=json.authToken;
+    localStorage.setItem("authStorageToken",authStorageToken)
+    const statusCode = response.status;
+    if (statusCode===201) {
+      toast.success("Logged in successfully!");
+      setTimeout(()=>(router.push('/dashboard')),3000);
+    } 
+    else if(statusCode===400){
+      toast.error(json.error);
+    }
+    else {
+      toast.error("invalid creds");
     }
   };
   const onChange = (e) => {

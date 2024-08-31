@@ -11,12 +11,35 @@ const register = () => {
     password: "",
     isAdmin: "",
   });
-  const onSubmit=(e)=>{
+  const onSubmit=async(e)=>{
     e.preventDefault();
+    // console.log(credentials)
+    const response = await fetch(`/api/register`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email: credentials.email,
+        password: credentials.password,
+        isAdmin: credentials.isAdmin,
+      }),
+    });
+    const json = await response.json();
+    const statusCode = response.status;
+
+    // console.log(json.status)
+    if(statusCode===201){
     toast.success("Registered successfully!");
-    console.log("code")
-    console.log(credentials)
     setTimeout(()=>(router.push('/login')),3000);
+    }
+    else  if(statusCode===400){
+    toast.error(json.error);
+    }
+    else{
+      toast.error("Invalid credentials!")
+    }
+
   }
   const onChange=(e)=>{
     setCredentials({ ...credentials, [e.target.name]: e.target.value });
