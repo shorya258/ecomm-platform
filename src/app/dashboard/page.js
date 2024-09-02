@@ -15,7 +15,7 @@ const dashboard = () => {
     const response = await fetch(apiURL);
     const productsRendered = await response.json();
     setProducts(productsRendered);
-    console.log(products);
+    console.log(productsRendered.image);
   };
   useEffect(() => {
     let authStorageToken = localStorage.getItem("authStorageToken");
