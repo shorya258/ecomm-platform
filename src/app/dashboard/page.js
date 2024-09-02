@@ -12,11 +12,10 @@ const dashboard = () => {
   const [isAdmin, toggleIsAdmin] = useState(false);
   const [products, setProducts]=useState();
   const fetchProducts = async () => {
-    // const apiURL = "/api/displayProducts";
-    const apiURL = "https://64e0caef50713530432cafa1.mockapi.io/api/products";
-    const response = await fetch(apiURL);
+    const response = await fetch('/api/displayProducts');
     const productsRendered = await response.json();
-    setProducts(productsRendered);
+    console.log(productsRendered)
+    setProducts(productsRendered.products);
   };
   const addProduct= async(product)=>{
     const response = await fetch(`/api/changeProductDetails`, {
