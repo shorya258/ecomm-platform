@@ -6,6 +6,7 @@ import "@/lib/fontawesome";
 import { jwtDecode } from "jwt-decode";
 import ProductCard from "../Components/ProductCard";
 import React from "react";
+import Link from "next/link";
 
 const dashboard = () => {
   const [isAdmin, toggleIsAdmin] = useState(false);
@@ -59,19 +60,23 @@ const dashboard = () => {
 
   return (
     <div>
-      <nav className="px-4 py-2 bg-indigo-900 min-h-10 text-2xl font-semibold flex flex-row justify-between ">
+      <nav className="px-4 py-2 bg-indigo-900 min-h-10 text-2xl font-semibold flex flex-col justify-between ">
+        <div className="flex flex-row" >
         <div> yooo </div>
         <div className="flex flex-row">
-          <div>
-            <FontAwesomeIcon icon={faUser} fontSize={30} />{" "}
-          </div>
+          <Link href='/profile'
+           >
+            <FontAwesomeIcon icon={faUser} fontSize={20} />{" "}
+          </Link>
           <div>{isAdmin ? <p>admin</p> : <p>team member</p>}</div>
         </div>
+        
+        </div>
+        
       </nav>
       <main className="flex flex-row flex-wrap p-2" >
         {products?.map((product,key)=>(
           <div key={key} className="m-5 max-w-{300px}" >
-
             <ProductCard  product={product}  />
           </div>
         ))}

@@ -93,7 +93,7 @@ const productId = () => {
     const decodedData = jwtDecode(authStorageToken);
     toggleIsAdmin(decodedData.user.isAdmin);
     if(decodedData.user.isAdmin){
-      setAdmEmail(decodedData.user.email);
+      setAdminEmail(decodedData.user.email);
     }
     else{
       setUserEmail(decodedData.user.email);
