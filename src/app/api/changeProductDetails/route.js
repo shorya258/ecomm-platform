@@ -3,12 +3,7 @@ import { connectToDatabase } from "@/lib/mongoose";
 import { NextResponse } from "next/server";
 const axios= require('axios');
 const apiURL = "https://64e0caef50713530432cafa1.mockapi.io/api/products";
-// async function getAllProducts(){
-  
-// }
-
 export async function POST(req) {
-
   try {
     const body = await req.json();
     const { id, productName,department, productDescription, price, image } = body;
