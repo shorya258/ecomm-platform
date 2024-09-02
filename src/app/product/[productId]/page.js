@@ -7,37 +7,92 @@ import { jwtDecode } from "jwt-decode";
 import Image from "next/image";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { storage, db } from "../../../../firebaseConfig";
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { collection, addDoc } from "firebase/firestore";
 const productId = () => {
   const searchParams = useSearchParams();
   const [product, setProduct] = useState({
-    id:"",
-    productName:"",
-    price:"",
-    department:"",
-    image:"",
-    productDescription:"",
+    id: "",
+    productName: "",
+    price: "",
+    department: "",
+    image: "",
+    productDescription: "",
   });
   const [isAdmin, toggleIsAdmin] = useState(false);
-  const [userEmail, setUserEmail]= useState("")
-  const [ adminEmail, setAdminEmail]= useState("")
+  const [userEmail, setUserEmail] = useState("");
+  const [adminEmail, setAdminEmail] = useState("");
   // department, id, image, price, productDescription, productName
+  const [image, setImage] = useState(null);
+  const [progress, setProgress] = useState(0);
+  const [uploading, setUploading] = useState(false);
 
-  const handleSubmit=(e, isAdmin, productDetails)=>{
-    e.preventDefault();
-    if(isAdmin){
-      handleSaveChanges();
+  const handleImageChange = (e) => {
+    if (e.target.files[0]) {
+      setImage(e.target.files[0]);
     }
-    else{
+  };
+  const handleUpload = async () => {
+    if (!image) {
+      alert("Please select an image to upload");
+      return;
+    }
+
+    setUploading(true);
+    const storageRef = ref(storage, `images/${image.name}`);
+    const uploadTask = uploadBytesResumable(storageRef, image);
+
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {
+        const progress =
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        setProgress(progress);
+      },
+      (error) => {
+        console.error("Upload failed:", error);
+        setUploading(false);
+      },
+      async () => {
+        try {
+          const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+          await addDoc(collection(db, "images"), {
+            url: downloadURL,
+            name: image.name,
+            createdAt: new Date(),
+          });
+          let oldProduct = product;
+          oldProduct.image = downloadURL;
+          console.log(downloadURL, "url");
+          setProduct(oldProduct)
+          alert("Image uploaded successfully!");
+        } catch (error) {
+          console.error("Error saving to Firestore:", error);
+        } finally {
+          setProgress(0);
+          setImage(null);
+          setUploading(false);
+        }
+      }
+    );
+  };
+
+  const handleSubmit = (e, isAdmin, productDetails) => {
+    e.preventDefault();
+    if (isAdmin) {
+      handleSaveChanges();
+    } else {
       handleSaveForReview(productDetails);
     }
-  }
+  };
 
-  const handleSaveChanges=(productDetails)=>{
-    console.log("handleSaveChanges called")
-  }
+  const handleSaveChanges = (productDetails) => {
+    console.log("handleSaveChanges called");
+  };
 
-  const handleSaveForReview= async(product)=>{
-    console.log("handleSaveForReview called",userEmail)
+  const handleSaveForReview = async (product) => {
+    console.log("handleSaveForReview called", userEmail);
     const response = await fetch(`/api/productForReview`, {
       method: "POST",
       headers: {
@@ -46,26 +101,23 @@ const productId = () => {
       body: JSON.stringify({
         userEmail: userEmail,
         adminEmail: null,
-        status:"pending",
-        productDetails:product,
+        status: "pending",
+        productDetails: product,
       }),
     });
     const json = await response.json();
-    console.log(json)
+    console.log(json);
     const statusCode = response.status;
 
-    console.log(json.status)
-    if(statusCode===201){
-    toast.success("Item added for review!");
+    console.log(json.status);
+    if (statusCode === 201) {
+      toast.success("Item added for review!");
+    } else if (statusCode === 400) {
+      toast.error(json.error);
+    } else {
+      toast.error("Failed to add the item!");
     }
-    else  if(statusCode===400){
-    toast.error(json.error);
-    }
-    else{
-      toast.error("Failed to add the item!")
-    }
-
-  }
+  };
 
   const onChange = (e) => {
     setProduct({ ...product, [e.target.name]: e.target.value });
@@ -80,8 +132,11 @@ const productId = () => {
         decodedProduct = JSON.parse(decodeURIComponent(productString));
         console.log(decodedProduct.productName);
         console.log(decodedProduct.image);
-        decodedProduct.image=decodedProduct.image.replace("images/","images%2F");
-        console.log(decodedProduct.image)
+        decodedProduct.image = decodedProduct.image.replace(
+          "images/",
+          "images%2F"
+        );
+        console.log(decodedProduct.image);
         setProduct(decodedProduct);
       } catch (e) {
         console.error("Error parsing product data:", e);
@@ -92,10 +147,9 @@ const productId = () => {
     let authStorageToken = localStorage.getItem("authStorageToken");
     const decodedData = jwtDecode(authStorageToken);
     toggleIsAdmin(decodedData.user.isAdmin);
-    if(decodedData.user.isAdmin){
+    if (decodedData.user.isAdmin) {
       setAdminEmail(decodedData.user.email);
-    }
-    else{
+    } else {
       setUserEmail(decodedData.user.email);
     }
   }, []);
@@ -104,7 +158,7 @@ const productId = () => {
 
   return (
     <div className="p-5 m-5 text-white bg-white">
-      <ToastContainer/>
+      <ToastContainer />
       <form className="grid justify-center ">
         <div className="space-y-12">
           <div className="border-b border-gray-900/10 pb-12">
@@ -130,10 +184,7 @@ const productId = () => {
                 <div className="mt-2 flex flex-col items-center gap-x-3">
                   <div className="max-w-[200px] overflow-hidden h-auto ">
                     {/* <Image src={product?.image} alt="product" width={200} height={200} /> */}
-                    <img
-                      src={product.image}
-                      alt="product"
-                    />
+                    <img src={product.image} alt="product" />
 
                     {/* {product.image} */}
                   </div>
@@ -146,6 +197,13 @@ const productId = () => {
                     >
                       Change
                     </button>
+                  </div>
+                  <div>
+                    <input type="file" onChange={handleImageChange} />
+                    <button onClick={handleUpload} disabled={uploading}   className="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                      {uploading ? "Uploading..." : "Upload Image"}
+                    </button>
+                    {progress > 0 && <progress value={progress} max="100" />}
                   </div>
                 </div>
               </div>
@@ -205,7 +263,7 @@ const productId = () => {
           <button
             type="submit"
             className="rounded-md bg-indigo-600 px-3 py-2 text-xl font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-            onClick={(e)=>(handleSubmit(e,isAdmin,product))}
+            onClick={(e) => handleSubmit(e, isAdmin, product)}
           >
             {isAdmin ? (
               <span>Save changes as admin</span>
