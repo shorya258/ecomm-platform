@@ -56,16 +56,13 @@ const productId = () => {
       },
       async () => {
         try {
-          const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-          await addDoc(collection(db, "images"), {
-            url: downloadURL,
-            name: image.name,
-            createdAt: new Date(),
+          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+            console.log(`Upload successful! File available at ${downloadURL}`);
+            let oldProduct = product;
+            oldProduct.image = downloadURL;
+            setProduct(oldProduct)
           });
-          let oldProduct = product;
-          oldProduct.image = downloadURL;
-          console.log(downloadURL, "url");
-          setProduct(oldProduct)
+
           alert("Image uploaded successfully!");
         } catch (error) {
           console.error("Error saving to Firestore:", error);
