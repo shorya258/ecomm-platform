@@ -1,14 +1,11 @@
 import React from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { usePathname } from 'next/navigation'
 const ProductCard = ({ product }) => {
     const router=useRouter();
-    const pathname=usePathname();
   const { productName, price, image, productDescription, department,id } = product;
   const navigateToProductPage=()=>{
     const productString=encodeURIComponent(JSON.stringify(product));
-    console.log(`product/${id}?product=${productString}`);
     router.push(`product/${id}?product=${productString}`)
   }
   return (

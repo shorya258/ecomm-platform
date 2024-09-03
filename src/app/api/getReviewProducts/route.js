@@ -19,7 +19,7 @@ export async function POST(req) {
     } 
 
     else if (requestStatus !== "pending" && user === "admin") {
-        reviews = await Review.find({ adminEmail: email });
+        reviews = await Review.find({ adminEmail: email, status: requestStatus  });
         // filter on the basis of products admin rejected or approved
     }
     else if(user === "team member"){
