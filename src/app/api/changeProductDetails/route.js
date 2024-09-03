@@ -2,30 +2,41 @@ import Product from "@/models/Product";
 import { connectToDatabase } from "@/lib/mongoose";
 import { NextResponse } from "next/server";
 const axios= require('axios');
+const mongoose = require('mongoose');
 const apiURL = "https://64e0caef50713530432cafa1.mockapi.io/api/products";
-export async function POST(req) {
+export async function PUT(req) {
   try {
     const body = await req.json();
-    const { id, productName,department, productDescription, price, image } = body;
-    if (!id || !productName ) {
+    const { product} = body;
+    console.log("product",product);
+    if (!product._id || !product.productName ) {
       return NextResponse.json(
         { error: "Missing required fields"},{ status: 400 }
       );
     }
     await connectToDatabase();
-    const newProduct = new Product({
-      id,
-      productName,
-      department,
-      productDescription,
-      price,
-      image
-    });
-    await newProduct.save();
+    const objectId=product._id;
+    await Product.findByIdAndUpdate(objectId,{
+      id:product.id,
+      productName:product.productName,
+      department:product.department,
+      productDescription: product.productDescription,
+      price: product.price,
+      image: product.image
+    })
+    .then(()=>{
+      console.log("success")
+    })
+    .catch((error)=>{
+      console.log("failed", error)
+    })
+    // updatedProduct.save();
+    // await existingProduct.save();
     return NextResponse.json(
-      { message: "product added successfully" }, { status: 201 }
+      { message: "product changed successfully by the admin" }, { status: 201 }
     );
   } catch (error) {
+    console.log(error)
     return NextResponse.json(
       { error: "Failed to add the product" }, {status: 500 }
     );

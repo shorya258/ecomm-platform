@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { useEffect } from "react";
-import { useSearchParams } from "next/navigation";
+import { useRouter ,useSearchParams } from "next/navigation";
 import { PhotoIcon, UserCircleIcon } from "@heroicons/react/24/solid";
 import { jwtDecode } from "jwt-decode";
 import Image from "next/image";
@@ -11,6 +11,7 @@ import { storage, db } from "../../../../firebaseConfig";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { collection, addDoc } from "firebase/firestore";
 const productId = () => {
+  const router= useRouter();
   const searchParams = useSearchParams();
   const [product, setProduct] = useState({
     id: "",
@@ -81,14 +82,38 @@ const productId = () => {
   const handleSubmit = (e, isAdmin, productDetails) => {
     e.preventDefault();
     if (isAdmin) {
-      handleSaveChanges();
+      handleSaveChanges(productDetails);
     } else {
       handleSaveForReview(productDetails);
     }
   };
 
-  const handleSaveChanges = (productDetails) => {
-    console.log("handleSaveChanges called");
+  const handleSaveChanges = async(product) => {
+
+    console.log("handleSaveChanges called", product);
+
+    const response = await fetch(`/api/changeProductDetails`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        product: product,
+      }),
+    });
+    const json = await response.json();
+    console.log(json);
+    const statusCode = response.status;
+
+    console.log(json.status);
+    if (statusCode === 201) {
+      toast.success("Item added for review!");
+      router.push('/dashboard');
+    } else if (statusCode === 400) {
+      toast.error(json.error);
+    } else {
+      toast.error("Failed to add the item!");
+    }
   };
 
   const handleSaveForReview = async (product) => {

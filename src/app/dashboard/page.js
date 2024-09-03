@@ -12,48 +12,41 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 const dashboard = () => {
   const [isAdmin, toggleIsAdmin] = useState(false);
-  const [products, setProducts]=useState();
-  const router= useRouter();
+  const [products, setProducts] = useState();
+  const router = useRouter();
   const fetchProducts = async () => {
-    const response = await fetch('/api/displayProducts');
+    const response= await fetch('/api/displayProducts');
     const productsRendered = await response.json();
-    // console.log(productsRendered)
     setProducts(productsRendered.products);
+    // console.log(productsRendered)
   };
-  const addProduct= async(product)=>{
+  const addProduct = async (product) => {
     const response = await fetch(`/api/changeProductDetails`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-      id: product.id,
-      productName: product.productName,
-      department: product.department,
-      productDescription: product.productDescription,
-      price: product.price,
-      image: product.image
+        product:product
       }),
     });
     const json = await response.json();
     const statusCode = response.status;
-    if(statusCode===201){
-      console.log("Added")
-    // toast.success("added product successfully!");
-    // setTimeout(()=>(router.push('/login')),3000);
+    if (statusCode === 201) {
+      console.log("Added");
+      toast.success("added product successfully!");
+      setTimeout(()=>(router.push('/login')),1500);
+    } else if (statusCode === 400) {
+      toast.error(json.error);
+    } else {
+      toast.error("Could not add product!");
     }
-    else  if(statusCode===400){
-    toast.error(json.error);
-    }
-    else{
-      toast.error("Could not add product!")
-    }
-  }
-  const handleLogOut=()=>{
-    setTimeout(()=>(toast.success("Logged out!")),2000);
+  };
+  const handleLogOut = () => {
+    setTimeout(() => toast.success("Logged out!"), 2000);
     localStorage.removeItem("authStorageToken");
-    router.push('/login');
-  }
+    router.push("/login");
+  };
   useEffect(() => {
     let authStorageToken = localStorage.getItem("authStorageToken");
     const decodedData = jwtDecode(authStorageToken);
@@ -61,36 +54,31 @@ const dashboard = () => {
     toggleIsAdmin(decodedData.user.isAdmin);
   }, []);
 
-  useEffect(()=>{
+  useEffect(() => {
     fetchProducts();
-  },[]);
+  }, []);
 
   return (
     <div>
-      <ToastContainer/>
+       <ToastContainer /> 
       <nav className="px-4 py-2 bg-indigo-900 min-h-10 text-2xl font-semibold flex flex-col justify-between ">
-        <div className="flex flex-row" >
-        <div> yooo </div>
         <div className="flex flex-row">
-          <Link href='/profile'
-           >
-            <FontAwesomeIcon icon={faUser} fontSize={20} />{" "}
-          </Link>
-          <div>{isAdmin ? <p>admin</p> : <p>team member</p>}</div>
+          <div> yooo </div>
+          <div className="flex flex-row">
+            <Link href="/profile">
+              <FontAwesomeIcon icon={faUser} fontSize={20} />{" "}
+            </Link>
+            <div>{isAdmin ? <p>admin</p> : <p>team member</p>}</div>
+          </div>
+          <div>
+            <button onClick={handleLogOut}>Logout</button>
+          </div>
         </div>
-        <div>
-          <button onClick={handleLogOut} >
-            Logout
-          </button>
-        </div>
-        
-        </div>
-        
       </nav>
-      <main className="flex flex-row flex-wrap p-2" >
-        {products?.map((product,key)=>(
-          <div key={key} className="m-5 max-w-{300px}" >
-            <ProductCard  product={product}  />
+      <main className="flex flex-row flex-wrap p-2">
+        {products?.map((product, key) => (
+          <div key={key} className="m-5 max-w-{300px}">
+            <ProductCard product={product} />
           </div>
         ))}
       </main>
