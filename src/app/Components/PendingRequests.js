@@ -57,10 +57,6 @@ const PendingRequests = () => {
         fetchPendingProducts(decodedData.user.email,"team member");
       }
   }, []);
-  
-
-
-
   return (
     <div>
         <div>
@@ -72,7 +68,7 @@ const PendingRequests = () => {
         </div>
         <div>
           {pendingProducts.map((singleProduct)=>{
-            return <div >
+            return <div key={singleProduct._id} >
              { singleProduct?.productDetails?.productName}
             </div>
           })}

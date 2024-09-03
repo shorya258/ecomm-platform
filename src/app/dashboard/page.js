@@ -17,7 +17,7 @@ const dashboard = () => {
   const fetchProducts = async () => {
     const response = await fetch('/api/displayProducts');
     const productsRendered = await response.json();
-    console.log(productsRendered)
+    // console.log(productsRendered)
     setProducts(productsRendered.products);
   };
   const addProduct= async(product)=>{
@@ -57,7 +57,7 @@ const dashboard = () => {
   useEffect(() => {
     let authStorageToken = localStorage.getItem("authStorageToken");
     const decodedData = jwtDecode(authStorageToken);
-    console.log(decodedData);
+    // console.log(decodedData);
     toggleIsAdmin(decodedData.user.isAdmin);
   }, []);
 
