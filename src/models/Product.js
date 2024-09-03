@@ -27,5 +27,5 @@ const productSchema = new Schema(
   }
 ); // department, id, image, price, productDescription, productName
 const Product =
-  mongoose.models.productSchema || mongoose.model("Product", productSchema);
+  mongoose.models.Product || mongoose.model("Product", productSchema);
 export default Product;
