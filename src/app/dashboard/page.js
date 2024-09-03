@@ -7,10 +7,13 @@ import { jwtDecode } from "jwt-decode";
 import ProductCard from "../Components/ProductCard";
 import React from "react";
 import Link from "next/link";
-
+import { useRouter } from "next/navigation";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 const dashboard = () => {
   const [isAdmin, toggleIsAdmin] = useState(false);
   const [products, setProducts]=useState();
+  const router= useRouter();
   const fetchProducts = async () => {
     const response = await fetch('/api/displayProducts');
     const productsRendered = await response.json();
@@ -46,6 +49,11 @@ const dashboard = () => {
       toast.error("Could not add product!")
     }
   }
+  const handleLogOut=()=>{
+    setTimeout(()=>(toast.success("Logged out!")),2000);
+    localStorage.removeItem("authStorageToken");
+    router.push('/login');
+  }
   useEffect(() => {
     let authStorageToken = localStorage.getItem("authStorageToken");
     const decodedData = jwtDecode(authStorageToken);
@@ -59,6 +67,7 @@ const dashboard = () => {
 
   return (
     <div>
+      <ToastContainer/>
       <nav className="px-4 py-2 bg-indigo-900 min-h-10 text-2xl font-semibold flex flex-col justify-between ">
         <div className="flex flex-row" >
         <div> yooo </div>
@@ -68,6 +77,11 @@ const dashboard = () => {
             <FontAwesomeIcon icon={faUser} fontSize={20} />{" "}
           </Link>
           <div>{isAdmin ? <p>admin</p> : <p>team member</p>}</div>
+        </div>
+        <div>
+          <button onClick={handleLogOut} >
+            Logout
+          </button>
         </div>
         
         </div>

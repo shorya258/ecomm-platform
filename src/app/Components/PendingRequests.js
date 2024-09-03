@@ -8,19 +8,45 @@ const PendingRequests = () => {
   const [ adminEmail, setAdminEmail]= useState("")
   const [pendingProducts, setPendingProducts] =useState([]);
   
-  const fetchPendingProducts=(email,user,status)=>{
+  const fetchPendingProducts=async(email,user)=>{
     if(user==="admin"){
-
+      const response = await fetch(`/api/getReviewProducts`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          user:"admin",
+          requestStatus:"pending"
+        }),
+      });
+      const json = await response.json();
+      console.log(json)
+      setPendingProducts(json.reviews);
     }
     else{
-
+      const response = await fetch(`/api/getReviewProducts`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          user:"team member",
+          requestStatus:"pending"
+        }),
+      });
+      const json = await response.json();
+      console.log(json)
+      setPendingProducts(json.reviews);
     }
   }
 
   useEffect(() => {
     let authStorageToken = localStorage.getItem("authStorageToken");
     const decodedData = jwtDecode(authStorageToken);
-    console.log(decodedData);
+    // console.log(decodedData);
     toggleIsAdmin(decodedData.user.isAdmin);
     if(decodedData.user.isAdmin){
         setAdminEmail(decodedData.user.email);
@@ -45,7 +71,11 @@ const PendingRequests = () => {
             are:
         </div>
         <div>
-
+          {pendingProducts.map((singleProduct)=>{
+            return <div >
+             { singleProduct?.productDetails?.productName}
+            </div>
+          })}
         </div>
     </div>
   )
