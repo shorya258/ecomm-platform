@@ -1,18 +1,36 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
-const ReviewedProductCard = (product, user, requestStatus) => {
+const ReviewedProductCard = ({ singleProduct, user, requestStatus,email,fetchAllData }) => {
   const router = useRouter();
-  const { productName, price, image, productDescription, department, id } =
-    product;
-//   const navigateToProductPage = () => {
-//     const productString = encodeURIComponent(JSON.stringify(product));
-//     router.push(`product/${id}?product=${productString}`);
-//   };
+  const[status, setStatus]=useState(requestStatus)
+  const setChangeStatus = async (changedStatus) => {
+    // console.log("status changed to", singleProduct,email,changedStatus);
 
-const setChangeStatus=(status)=>{
+    const response = await fetch(`/api/changeReviewStatus`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        review: singleProduct,
+        adminEmail: email,
+        status: changedStatus,
+      }),
+    });
+    const json = await response.json();
+    const statusCode = response.status;
+    if(statusCode===201){
+        setStatus(changedStatus);
+    }
+    console.log(json);
 
-}
+  };
+
+useEffect(() => {
+    fetchAllData(email,user)
+}, [status])
+
 
   return (
     <div>
@@ -20,7 +38,7 @@ const setChangeStatus=(status)=>{
         <div href="/" className=" h-48 overflow-hidden ">
           <img
             className="rounded-t-lg w-full h-full object-cover "
-            src={image}
+            src={singleProduct.productDetails.image}
             alt="product card image"
             width={200}
           />
@@ -30,16 +48,16 @@ const setChangeStatus=(status)=>{
           <div>
             <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
               {" "}
-              {productName}{" "}
+              {singleProduct.productDetails.productName}{" "}
             </h5>
           </div>
           <p className="mb-3 font-normal text-gray-700 dark:text-gray-400 overflow-hidden ">
-            {productDescription}
+            {singleProduct.productDetails.productDescription}
           </p>
           {user === "admin" && requestStatus === "pending" && (
             <div>
               <button
-                onClick={()=>(setChangeStatus("approved"))}
+                onClick={() => setChangeStatus("approved")}
                 className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
               >
                 Approve
@@ -60,7 +78,7 @@ const setChangeStatus=(status)=>{
                 </svg>
               </button>
               <button
-                onClick={()=>(setChangeStatus("rejected"))}
+                onClick={() => setChangeStatus("rejected")}
                 className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-red-700 rounded-lg hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800"
               >
                 Reject

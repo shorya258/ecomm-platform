@@ -40,7 +40,7 @@ const Product = () => {
       }),
     });
     const json = await response.json();
-    console.log(json);
+    // console.log(json);
     setPendingProducts(json.reviews);
   };
   const fetchApprovedProducts = async (email, user) => {
@@ -56,7 +56,7 @@ const Product = () => {
       }),
     });
     const json = await response.json();
-    console.log(json);
+    // console.log(json);
     setApprovedProducts(json.reviews);
   };
   const fetchRejectedProducts = async (email, user) => {
@@ -72,10 +72,15 @@ const Product = () => {
       }),
     });
     const json = await response.json();
-    console.log(json);
+    // console.log(json);
     setRejectedProducts(json.reviews);
   };
 
+  const fetchAllData = async (email, userType) => {
+    fetchPendingProducts(email, userType);
+    fetchApprovedProducts(email, userType);
+    fetchRejectedProducts(email, userType);
+  };
   useEffect(() => {
     let authStorageToken = localStorage.getItem("authStorageToken");
     const decodedData = jwtDecode(authStorageToken);
@@ -83,16 +88,13 @@ const Product = () => {
     toggleIsAdmin(decodedData.user.isAdmin);
     if (decodedData.user.isAdmin) {
       setAdminEmail(decodedData.user.email);
-      fetchPendingProducts(decodedData.user.email, "admin");
-      fetchApprovedProducts(decodedData.user.email, "admin");
-      fetchRejectedProducts(decodedData.user.email, "admin");
+      fetchAllData(decodedData.user.email,"admin")
     } else {
       setUserEmail(decodedData.user.email);
-      fetchPendingProducts(decodedData.user.email, "team member");
-      fetchApprovedProducts(decodedData.user.email, "team member");
-      fetchRejectedProducts(decodedData.user.email, "team member");
+      fetchAllData(decodedData.user.email,"team member")
     }
   }, []);
+
   return (
     <div className="flex flex-col m-4 ">
       {isAdmin ? <div> Hello admin!</div> : <div>Hello team member</div>}
@@ -129,6 +131,8 @@ const Product = () => {
                     singleProduct={singleProduct}
                     user={isAdmin ? "admin" : "team member"}
                     requestStatus={"approved"}
+                    email={isAdmin ? adminEmail : userEmail}
+                    fetchAllData={fetchAllData}
                   />
                 </div>
               );
@@ -144,6 +148,8 @@ const Product = () => {
                     singleProduct={singleProduct}
                     user={isAdmin ? "admin" : "team member"}
                     requestStatus={"pending"}
+                    email={isAdmin ? adminEmail : userEmail}
+                    fetchAllData={fetchAllData}
                   />
                 </div>
               );
@@ -159,6 +165,8 @@ const Product = () => {
                     singleProduct={singleProduct}
                     user={isAdmin ? "admin" : "team member"}
                     requestStatus={"rejected"}
+                    email={isAdmin ? adminEmail : userEmail}
+                    fetchAllData={fetchAllData}
                   />
                 </div>
               );
