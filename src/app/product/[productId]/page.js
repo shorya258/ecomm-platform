@@ -275,20 +275,8 @@ const productId = () => {
                   </label>
                   <div className="mt-2 flex flex-col items-center gap-x-3">
                     <div className="max-w-[200px] overflow-hidden h-auto ">
-                      {/* <Image src={product?.image} alt="product" width={200} height={200} /> */}
                       <img src={product.image} alt="product" />
 
-                      {/* {product.image} */}
-                    </div>
-                    {/* <UserCircleIcon aria-hidden="true" className="h-12 w-12 text-gray-300" /> */}
-
-                    <div>
-                      <button
-                        type="button"
-                        className="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-                      >
-                        Change
-                      </button>
                     </div>
                     <div>
                       <input type="file" onChange={handleImageChange} />

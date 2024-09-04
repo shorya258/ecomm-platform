@@ -77,7 +77,7 @@ const page = () => {
   {
     (pendingProducts.length===0 && approvedProducts.length===0 && rejectedProducts.length===0)?<div>You have no products to display!</div>:
     <div>
-          <div className="flex flex-row">
+          <div className="flex flex-row flex-wrap">
         {approvedProducts?.map((singleProduct) => {
           return (
             <div key={singleProduct._id} className="flex flex-row" >
@@ -91,8 +91,6 @@ const page = () => {
             </div>
           );
         })}
-      </div>
-      <div className="flex flex-row" >
         {pendingProducts?.map((singleProduct) => {
           return (
             <div key={singleProduct._id} className="flex flex-row" >
@@ -106,8 +104,6 @@ const page = () => {
             </div>
           );
         })}
-      </div>
-      <div className="flex flex-row">
         {rejectedProducts?.map((singleProduct) => {
           return (
             <div key={singleProduct._id} className="flex flex-row" >

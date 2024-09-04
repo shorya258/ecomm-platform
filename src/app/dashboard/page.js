@@ -74,11 +74,11 @@ const dashboard = () => {
           </div>
         </div>
       </nav>
-      <main className="flex flex-row flex-wrap p-2">
+      <div className="flex flex-row flex-wrap p-2 justify-center">
         {products?.map((product, key) => (
           <ProductCard product={product} key={key} />
         ))}
-      </main>
+      </div>
     </div>
   );
 };

@@ -106,27 +106,27 @@ const Profile = () => {
           </div>
 
           <button
-                onClick={() => router.push("/pending-requests")}
-                className="inline-flex items-center mb-3 px-3 py-2 text-sm font-medium text-center text-white bg-indigo-700 rounded-lg hover:bg-indigo-800 focus:ring-4 focus:outline-none focus:ring-indigo-300 dark:bg-indigo-600 dark:hover:bg-indigo-700 dark:focus:ring-indigo-800"
-              >
-                Show all pending requests
-                <svg
-                  className="rtl:rotate-180 w-3.5 h-3.5 ms-2"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 14 10"
-                >
-                  <path
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M1 5h12m0 0L9 1m4 4L9 9"
-                  />
-                </svg>
-              </button>
-          
+            onClick={() => router.push("/pending-requests")}
+            className="inline-flex items-center mb-3 px-3 py-2 text-sm font-medium text-center text-white bg-indigo-700 rounded-lg hover:bg-indigo-800 focus:ring-4 focus:outline-none focus:ring-indigo-300 dark:bg-indigo-600 dark:hover:bg-indigo-700 dark:focus:ring-indigo-800"
+          >
+            Show all pending requests
+            <svg
+              className="rtl:rotate-180 w-3.5 h-3.5 ms-2"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 14 10"
+            >
+              <path
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M1 5h12m0 0L9 1m4 4L9 9"
+              />
+            </svg>
+          </button>
+
           {/* <button
             className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white"
             onClick={() => router.push("/pending-requests")}
@@ -191,15 +191,14 @@ const Profile = () => {
             <div className="flex flex-row flex-wrap">
               {approvedProducts?.map((singleProduct) => {
                 return (
-                  <div key={singleProduct._id}>
-                    <ReviewedProductCard
-                      singleProduct={singleProduct}
-                      user={isAdmin ? "admin" : "team member"}
-                      requestStatus={"approved"}
-                      email={isAdmin ? adminEmail : userEmail}
-                      fetchAllData={fetchAllData}
-                    />
-                  </div>
+                  <ReviewedProductCard
+                    key={singleProduct._id}
+                    singleProduct={singleProduct}
+                    user={isAdmin ? "admin" : "team member"}
+                    requestStatus={"approved"}
+                    email={isAdmin ? adminEmail : userEmail}
+                    fetchAllData={fetchAllData}
+                  />
                 );
               })}
             </div>
@@ -211,15 +210,14 @@ const Profile = () => {
             <div className="flex flex-row flex-wrap ">
               {pendingProducts?.map((singleProduct) => {
                 return (
-                  <div key={singleProduct._id}>
-                    <ReviewedProductCard
-                      singleProduct={singleProduct}
-                      user={isAdmin ? "admin" : "team member"}
-                      requestStatus={"pending"}
-                      email={isAdmin ? adminEmail : userEmail}
-                      fetchAllData={fetchAllData}
-                    />
-                  </div>
+                  <ReviewedProductCard
+                    key={singleProduct._id}
+                    singleProduct={singleProduct}
+                    user={isAdmin ? "admin" : "team member"}
+                    requestStatus={"pending"}
+                    email={isAdmin ? adminEmail : userEmail}
+                    fetchAllData={fetchAllData}
+                  />
                 );
               })}
             </div>
@@ -231,15 +229,14 @@ const Profile = () => {
             <div className="flex flex-row flex-wrap ">
               {rejectedProducts?.map((singleProduct) => {
                 return (
-                  <div key={singleProduct._id} className="">
-                    <ReviewedProductCard
-                      singleProduct={singleProduct}
-                      user={isAdmin ? "admin" : "team member"}
-                      requestStatus={"rejected"}
-                      email={isAdmin ? adminEmail : userEmail}
-                      fetchAllData={fetchAllData}
-                    />
-                  </div>
+                  <ReviewedProductCard
+                    key={singleProduct._id}
+                    singleProduct={singleProduct}
+                    user={isAdmin ? "admin" : "team member"}
+                    requestStatus={"rejected"}
+                    email={isAdmin ? adminEmail : userEmail}
+                    fetchAllData={fetchAllData}
+                  />
                 );
               })}
             </div>
