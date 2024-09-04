@@ -77,9 +77,7 @@ const dashboard = () => {
       </nav>
       <main className="flex flex-row flex-wrap p-2">
         {products?.map((product, key) => (
-          <div key={key} className="m-5 max-w-{300px}">
-            <ProductCard product={product} />
-          </div>
+          <ProductCard product={product} key={key} />
         ))}
       </main>
     </div>
