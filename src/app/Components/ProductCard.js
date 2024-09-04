@@ -9,7 +9,7 @@ const ProductCard = ({ product }) => {
     router.push(`product/${id}?product=${productString}`)
   }
   return (
-    <div className="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 w-64 min-h-150 ">
+    <div className="bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 w-[300px] min-h-[400px] m-5 flex flex-col relative">
       <div href="/" className=" h-48 overflow-hidden ">
         <img
           className="rounded-t-lg w-full h-full object-cover "
@@ -27,7 +27,7 @@ const ProductCard = ({ product }) => {
             {productName}{" "}
           </h5>
         </div>
-        <p className="mb-3 font-normal text-gray-700 dark:text-gray-400 overflow-hidden ">
+        <p className="mb-10 font-normal text-gray-700 dark:text-gray-400 overflow-hidden ">
           {productDescription}
         </p>
         {/* <Link
@@ -54,7 +54,7 @@ const ProductCard = ({ product }) => {
         </Link> */}
         <button
           onClick={navigateToProductPage}
-          className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+          className="absolute bottom-3 inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
         >
           Edit
           <svg

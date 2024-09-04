@@ -1,9 +1,8 @@
-import User from "@/models/User";
+import User from "../../../models/user";
 import { connectToDatabase } from "@/lib/mongoose";
 import { NextResponse } from "next/server";
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-const jwtSecret = "uhvgcdfz9876t566r#987jihh";
 export async function POST(req) {
   try {
     const body = await req.json();
@@ -36,7 +35,7 @@ export async function POST(req) {
         isAdmin: existingUser.isAdmin,
       },
     };
-    const authToken = jwt.sign(data, jwtSecret);
+    const authToken = jwt.sign(data, process.env.JWT_SECRET);
     return NextResponse.json(
       { message: "Logged in successfully!", authToken:authToken },
       { status: 201 }

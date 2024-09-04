@@ -10,6 +10,9 @@ import "react-toastify/dist/ReactToastify.css";
 import { storage, db } from "../../../../firebaseConfig";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { collection, addDoc } from "firebase/firestore";
+import { CropperRef, Cropper } from "react-advanced-cropper";
+import "react-advanced-cropper/dist/style.css";
+import { FixedCropper, ImageRestriction } from 'react-advanced-cropper'
 const productId = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -176,129 +179,154 @@ const productId = () => {
   }, []);
 
   //   department, id, image, price, productDescription, productName
+  const onCrop = (cropper) => {
+    console.log(cropper.getCoordinates(), cropper.getCanvas());
+  };
 
   return (
-    <div className="p-5 m-5 text-white bg-white">
-      <ToastContainer />
-      <form className="grid justify-center ">
-        <div className="space-y-12">
-          <div className="border-b border-gray-900/10 pb-12">
-            <h2 className="font-semibold leading-7 text-gray-900 text-3xl ">
-              Product details
-            </h2>
-            <div className="mt-1 text-sm leading-6 text-gray-600">
-              {isAdmin ? (
-                <p> You can directly edit these items as you are admin. </p>
-              ) : (
-                <p>An admin will approve any changes done to this product. </p>
-              )}
-            </div>
-
-            <div className="mt-10 flex flex-row ">
-              <div className="col-span-full mr-10 flex flex-col ">
-                <label
-                  htmlFor="photo"
-                  className="block text-xl font-medium leading-6 text-gray-900"
-                >
-                  Photo
-                </label>
-                <div className="mt-2 flex flex-col items-center gap-x-3">
-                  <div className="max-w-[200px] overflow-hidden h-auto ">
-                    {/* <Image src={product?.image} alt="product" width={200} height={200} /> */}
-                    <img src={product.image} alt="product" />
-
-                    {/* {product.image} */}
-                  </div>
-                  {/* <UserCircleIcon aria-hidden="true" className="h-12 w-12 text-gray-300" /> */}
-
-                  <div>
-                    <button
-                      type="button"
-                      className="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-                    >
-                      Change
-                    </button>
-                  </div>
-                  <div>
-                    <input type="file" onChange={handleImageChange} />
-                    <button
-                      onClick={handleUpload}
-                      disabled={uploading}
-                      className="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-                    >
-                      {uploading ? "Uploading..." : "Upload Image"}
-                    </button>
-                    {progress > 0 && <progress value={progress} max="100" />}
-                  </div>
-                </div>
+    <>
+      {console.log(image)}
+{   image &&   <FixedCropper
+        src={image}
+        stencilSize={{
+          width: 280,
+          height: 280,
+        }}
+        className={"cropper"}
+        imageRestriction={ImageRestriction.stencil}
+      />}
+      {/* {image && (
+        <Cropper
+          src={image}
+          onChange={onCrop}
+          className={"cropper"}
+          style={{ height: "300px" }}
+        />
+      )} */}
+      <div className="p-5 m-5 text-white bg-white">
+        <ToastContainer />
+        <form className="grid justify-center ">
+          <div className="space-y-12">
+            <div className="border-b border-gray-900/10 pb-12">
+              <h2 className="font-semibold leading-7 text-gray-900 text-3xl ">
+                Product details
+              </h2>
+              <div className="mt-1 text-sm leading-6 text-gray-600">
+                {isAdmin ? (
+                  <p> You can directly edit these items as you are admin. </p>
+                ) : (
+                  <p>
+                    An admin will approve any changes done to this product.{" "}
+                  </p>
+                )}
               </div>
-              <div className=" grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-                <div className="sm:col-span-4">
+
+              <div className="mt-10 flex flex-row ">
+                <div className="col-span-full mr-10 flex flex-col ">
                   <label
-                    htmlFor="username"
+                    htmlFor="photo"
                     className="block text-xl font-medium leading-6 text-gray-900"
                   >
-                    Name
+                    Photo
                   </label>
-                  <div className="mt-2">
-                    <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
-                      <input
-                        id="productname"
-                        name="productname"
-                        type="productname"
-                        value={product.productName}
-                        onChange={onChange}
-                        className="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
-                      />
+                  <div className="mt-2 flex flex-col items-center gap-x-3">
+                    <div className="max-w-[200px] overflow-hidden h-auto ">
+                      {/* <Image src={product?.image} alt="product" width={200} height={200} /> */}
+                      <img src={product.image} alt="product" />
+
+                      {/* {product.image} */}
+                    </div>
+                    {/* <UserCircleIcon aria-hidden="true" className="h-12 w-12 text-gray-300" /> */}
+
+                    <div>
+                      <button
+                        type="button"
+                        className="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+                      >
+                        Change
+                      </button>
+                    </div>
+                    <div>
+                      <input type="file" onChange={handleImageChange} />
+                      <button
+                        onClick={handleUpload}
+                        disabled={uploading}
+                        className="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+                      >
+                        {uploading ? "Uploading..." : "Upload Image"}
+                      </button>
+                      {progress > 0 && <progress value={progress} max="100" />}
                     </div>
                   </div>
                 </div>
-
-                <div className="col-span-full">
-                  <label
-                    htmlFor="productDescription"
-                    className="block text-xl font-medium leading-6 text-gray-900"
-                  >
-                    About
-                  </label>
-                  <div className="mt-2">
-                    <textarea
-                      id="productDescription"
-                      name="productDescription"
-                      value={product.productDescription}
-                      onChange={onChange}
-                      rows={3}
-                      className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                    />
+                <div className=" grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+                  <div className="sm:col-span-4">
+                    <label
+                      htmlFor="username"
+                      className="block text-xl font-medium leading-6 text-gray-900"
+                    >
+                      Name
+                    </label>
+                    <div className="mt-2">
+                      <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
+                        <input
+                          id="productname"
+                          name="productname"
+                          type="productname"
+                          value={product.productName}
+                          onChange={onChange}
+                          className="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                        />
+                      </div>
+                    </div>
                   </div>
-                  {/* <p className="mt-3 text-sm leading-6 text-gray-600">Write a few sentences about yourself.</p> */}
+
+                  <div className="col-span-full">
+                    <label
+                      htmlFor="productDescription"
+                      className="block text-xl font-medium leading-6 text-gray-900"
+                    >
+                      About
+                    </label>
+                    <div className="mt-2">
+                      <textarea
+                        id="productDescription"
+                        name="productDescription"
+                        value={product.productDescription}
+                        onChange={onChange}
+                        rows={3}
+                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                      />
+                    </div>
+                    {/* <p className="mt-3 text-sm leading-6 text-gray-600">Write a few sentences about yourself.</p> */}
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
 
-        <div className="mt-6 flex items-center justify-center gap-x-6">
-          <button
-            type="button"
-            className="text-sm font-semibold leading-6 text-gray-900"
-          >
-            Cancel
-          </button>
-          <button
-            type="submit"
-            className="rounded-md bg-indigo-600 px-3 py-2 text-xl font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-            onClick={(e) => handleSubmit(e, isAdmin, product)}
-          >
-            {isAdmin ? (
-              <span>Save changes as admin</span>
-            ) : (
-              <span>Save changes for review</span>
-            )}
-          </button>
-        </div>
-      </form>
-    </div>
+          <div className="mt-6 flex items-center justify-center gap-x-6">
+            <button
+              type="button"
+              className="text-sm font-semibold leading-6 text-gray-900"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="rounded-md bg-indigo-600 px-3 py-2 text-xl font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              onClick={(e) => handleSubmit(e, isAdmin, product)}
+            >
+              {isAdmin ? (
+                <span>Save changes as admin</span>
+              ) : (
+                <span>Save changes for review</span>
+              )}
+            </button>
+          </div>
+        </form>
+      </div>
+    </>
   );
 };
 

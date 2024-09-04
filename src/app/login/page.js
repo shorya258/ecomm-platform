@@ -43,6 +43,33 @@ const login = () => {
   const onChange = (e) => {
     setCredentials({ ...credentials, [e.target.name]: e.target.value });
   };
+  const handleForgotPassword = async (e) => {
+    console.log(credentials.email);
+    e.preventDefault();
+
+    try {
+      const response = await fetch('/api/forgotPassword', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email : credentials.email }),
+      });
+
+      const data = await response.json();
+      const statusCode = response.status;
+      if (statusCode===201) {
+        toast.success("Check Email for one time login link");
+        // setTimeout(()=>(router.push('/dashboard')),3000);
+      } 
+      else if(statusCode===400){
+        toast.error(json.error);
+      }
+      else {
+        toast.error("Error Sending One time Login Link");
+      }
+    } catch (error) {
+      toast.error("Error Sending One time Login Link");
+    }
+  };
   return (
     <div>
       <ToastContainer />
@@ -91,12 +118,12 @@ const login = () => {
                   Password
                 </label>
                 <div className="text-sm">
-                  <a
-                    href="#"
+                  <button
                     className="font-semibold text-indigo-600 hover:text-indigo-500"
+                    onClick={handleForgotPassword}
                   >
                     Forgot password?
-                  </a>
+                  </button>
                 </div>
               </div>
               <div className="mt-2">
@@ -108,7 +135,6 @@ const login = () => {
                   autoComplete="current-password"
                   value={credentials.password}
                   onChange={onChange}
-                  required
                   className="block w-full rounded-md border-0 p-1.5   shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 text-black"
                 />
               </div>
