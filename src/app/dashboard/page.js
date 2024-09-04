@@ -61,11 +61,10 @@ const dashboard = () => {
   return (
     <div>
        <ToastContainer /> 
-      <nav className="px-4 py-2 bg-indigo-900 min-h-10 text-2xl font-semibold flex flex-col justify-between ">
-        <div className="flex flex-row">
-          <div> yooo </div>
+      <nav className="px-4 py-2 bg-indigo-900 min-h-10 text-2xl font-semibold flex flex-col ">
+        <div className="flex flex-row justify-between ">
           <div className="flex flex-row">
-            <Link href="/profile">
+            <Link href="/profile" className="mr-3" >
               <FontAwesomeIcon icon={faUser} fontSize={20} />{" "}
             </Link>
             <div>{isAdmin ? <p>admin</p> : <p>team member</p>}</div>

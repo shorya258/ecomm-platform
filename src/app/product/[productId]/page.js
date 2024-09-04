@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { useEffect } from "react";
-import { useRouter ,useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { PhotoIcon, UserCircleIcon } from "@heroicons/react/24/solid";
 import { jwtDecode } from "jwt-decode";
 import Image from "next/image";
@@ -11,7 +11,7 @@ import { storage, db } from "../../../../firebaseConfig";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { collection, addDoc } from "firebase/firestore";
 const productId = () => {
-  const router= useRouter();
+  const router = useRouter();
   const searchParams = useSearchParams();
   const [product, setProduct] = useState({
     id: "",
@@ -61,7 +61,7 @@ const productId = () => {
             console.log(`Upload successful! File available at ${downloadURL}`);
             let oldProduct = product;
             oldProduct.image = downloadURL;
-            setProduct(oldProduct)
+            setProduct(oldProduct);
           });
 
           alert("Image uploaded successfully!");
@@ -85,8 +85,7 @@ const productId = () => {
     }
   };
 
-  const handleSaveChanges = async(product) => {
-
+  const handleSaveChanges = async (product) => {
     console.log("handleSaveChanges called", product);
 
     const response = await fetch(`/api/changeProductDetails`, {
@@ -105,7 +104,7 @@ const productId = () => {
     console.log(json.status);
     if (statusCode === 201) {
       toast.success("Item added for review!");
-      router.push('/dashboard');
+      router.push("/dashboard");
     } else if (statusCode === 400) {
       toast.error(json.error);
     } else {
@@ -222,7 +221,11 @@ const productId = () => {
                   </div>
                   <div>
                     <input type="file" onChange={handleImageChange} />
-                    <button onClick={handleUpload} disabled={uploading}   className="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                    <button
+                      onClick={handleUpload}
+                      disabled={uploading}
+                      className="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+                    >
                       {uploading ? "Uploading..." : "Upload Image"}
                     </button>
                     {progress > 0 && <progress value={progress} max="100" />}

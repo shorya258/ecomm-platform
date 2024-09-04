@@ -2,8 +2,10 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import { jwtDecode } from "jwt-decode";
+import { useRouter } from "next/navigation";
 import ReviewedProductCard from "../Components/ReviewedProductCard";
-const Product = () => {
+const Profile = () => {
+  const router= useRouter();
   const [userEmail, setUserEmail] = useState("");
   const [adminEmail, setAdminEmail] = useState("");
   const [isAdmin, toggleIsAdmin] = useState(false);
@@ -88,16 +90,22 @@ const Product = () => {
     toggleIsAdmin(decodedData.user.isAdmin);
     if (decodedData.user.isAdmin) {
       setAdminEmail(decodedData.user.email);
-      fetchAllData(decodedData.user.email,"admin")
+      fetchAllData(decodedData.user.email, "admin");
     } else {
       setUserEmail(decodedData.user.email);
-      fetchAllData(decodedData.user.email,"team member")
+      fetchAllData(decodedData.user.email, "team member");
     }
   }, []);
 
   return (
     <div className="flex flex-col m-4 ">
-      {isAdmin ? <div> Hello admin!</div> : <div>Hello team member</div>}
+      {isAdmin ? <div> Hello admin!</div> : 
+      <div>
+        <div>Hello team member</div>
+        {/* <Link href={{ pathname: '/profile/my-submissions', query: { pendingProducts: pendingProducts, } }} >Show all submissions</Link> */}
+        <button onClick={()=>router.push("/profile/my-submissions")} >Show all submissions</button>
+        </div>
+      }
       <div className="flex flex-row gap-3 max-w-0.8 border-b border-white pb-2">
         <button
           onClick={(e) => handleRequestsFilter(e, "pending")}
@@ -122,41 +130,45 @@ const Product = () => {
       </div>
       <br />
       <div>
-        {showRequests === "approved" && (
-          <div>
-            {approvedProducts?.map((singleProduct) => {
-              return (
-                <div key={singleProduct._id}>
-                  <ReviewedProductCard
-                    singleProduct={singleProduct}
-                    user={isAdmin ? "admin" : "team member"}
-                    requestStatus={"approved"}
-                    email={isAdmin ? adminEmail : userEmail}
-                    fetchAllData={fetchAllData}
-                  />
-                </div>
-              );
-            })}
-          </div>
-        )}
+        {showRequests === "approved" &&
+          (approvedProducts.length === 0 ? (
+            <div>No approved products to display yet!</div>
+          ) : (
+            <div>
+              {approvedProducts?.map((singleProduct) => {
+                return (
+                  <div key={singleProduct._id}>
+                    <ReviewedProductCard
+                      singleProduct={singleProduct}
+                      user={isAdmin ? "admin" : "team member"}
+                      requestStatus={"approved"}
+                      email={isAdmin ? adminEmail : userEmail}
+                      fetchAllData={fetchAllData}
+                    />
+                  </div>
+                );
+              })}
+            </div>
+          ))}
         {showRequests === "pending" && (
-          <div>
-            {pendingProducts?.map((singleProduct) => {
-              return (
-                <div key={singleProduct._id}>
-                  <ReviewedProductCard
-                    singleProduct={singleProduct}
-                    user={isAdmin ? "admin" : "team member"}
-                    requestStatus={"pending"}
-                    email={isAdmin ? adminEmail : userEmail}
-                    fetchAllData={fetchAllData}
-                  />
-                </div>
-              );
-            })}
-          </div>
+          pendingProducts.length===0?<div>No pending products yet!</div>:<div>
+          {pendingProducts?.map((singleProduct) => {
+            return (
+              <div key={singleProduct._id}>
+                <ReviewedProductCard
+                  singleProduct={singleProduct}
+                  user={isAdmin ? "admin" : "team member"}
+                  requestStatus={"pending"}
+                  email={isAdmin ? adminEmail : userEmail}
+                  fetchAllData={fetchAllData}
+                />
+              </div>
+            );
+          })}
+        </div>
         )}
         {showRequests === "rejected" && (
+          rejectedProducts.length===0?<div>No rejected products yet!</div>:
           <div>
             {rejectedProducts?.map((singleProduct) => {
               return (
@@ -178,4 +190,4 @@ const Product = () => {
   );
 };
 
-export default Product;
+export default Profile;
