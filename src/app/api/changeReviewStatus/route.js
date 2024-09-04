@@ -1,4 +1,4 @@
-import Review from "@/models/Review";
+import Review from "../../../models/Review";
 import { connectToDatabase } from "@/lib/mongoose";
 import { NextResponse } from "next/server";
 export async function PUT(req) {
