@@ -39,19 +39,44 @@ const PendingRequests = () => {
     setEmail(decodedData.user.email);
   }, []);
   return (
-    <div>
-      <div>
+    <div className="mt-3" >
+      <div >
+      <button
+        onClick={() => router.push("/profile")}
+        className="inline-flex items-center mb-3 mr-2 px-3 py-2 text-sm font-medium text-center text-white bg-indigo-700 rounded-lg hover:bg-indigo-800 focus:ring-4 focus:outline-none focus:ring-indigo-300 dark:bg-indigo-600 dark:hover:bg-indigo-700 dark:focus:ring-indigo-800"
+      >
+        <svg
+          className="rtl:rotate-180 w-3.5 h-3.5 mr-2"
+          aria-hidden="true"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 14 10"
+        >
+          <path
+            stroke="currentColor"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            d="M13 5H1m0 0l4-4m-4 4l4 4"
+          />
+        </svg>
+        Back to your profile
+      </button>
+      </div>
+      <div className="justify-center items-center">
         {pendingProducts.length === 0 ? (
-          <div>No pending products yet!</div>
+          <div className="text-3xl font-extrabold ">
+          You have no products to display!
+        </div>
         ) : (
-          <div className="flex flex-row" >
+          <div className="flex flex-wrap justify-center " >
             {pendingProducts?.map((singlePendingProduct, key) => {
               return (
                 <div
                   key={singlePendingProduct._id}
-                  className="bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 w-[300px] min-h-[400px] m-5 flex flex-col relative"
+                  className="relative bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 w-[300px] min-h-[500px] m-5 flex flex-col"
                 >
-                  <div href="/" className=" h-48 overflow-hidden ">
+                  <div className=" h-48 overflow-hidden ">
                     <img
                       className="rounded-t-lg w-full h-full object-cover "
                       src={singlePendingProduct.image}
@@ -65,7 +90,7 @@ const PendingRequests = () => {
                   <div>Price: $ {singlePendingProduct.price}</div>
                   </div>
                   <button
-                    className="rounded-md bg-indigo-600 px-3 py-2 text-xl font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                    className="absolute bottom-0 m-3 rounded-md bg-indigo-600  px-3 py-2 text-sm text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                     onClick={() => navigateRequestIdPage(singlePendingProduct)}
                   >
                     Manage this request
