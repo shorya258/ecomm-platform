@@ -34,8 +34,8 @@ useEffect(() => {
 
 
   return (
-    <div className="m-4" >
-      <div className="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 w-64 min-h-150 ">
+    <div className="m-4 " >
+      <div className="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 w-64 min-h-[400px] ">
         <div href="/" className=" h-48 overflow-hidden ">
           <img
             className="rounded-t-lg w-full h-full object-cover "

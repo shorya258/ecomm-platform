@@ -188,7 +188,7 @@ const Profile = () => {
           (approvedProducts.length === 0 ? (
             <div>No approved products to display yet!</div>
           ) : (
-            <div className="flex flex-row">
+            <div className="flex flex-row flex-wrap">
               {approvedProducts?.map((singleProduct) => {
                 return (
                   <div key={singleProduct._id}>
@@ -208,7 +208,7 @@ const Profile = () => {
           (pendingProducts.length === 0 ? (
             <div>No pending products yet!</div>
           ) : (
-            <div className="flex flex-row">
+            <div className="flex flex-row flex-wrap ">
               {pendingProducts?.map((singleProduct) => {
                 return (
                   <div key={singleProduct._id}>
@@ -228,7 +228,7 @@ const Profile = () => {
           (rejectedProducts.length === 0 ? (
             <div>No rejected products yet!</div>
           ) : (
-            <div className="flex flex-row">
+            <div className="flex flex-row flex-wrap ">
               {rejectedProducts?.map((singleProduct) => {
                 return (
                   <div key={singleProduct._id} className="">
