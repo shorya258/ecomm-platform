@@ -99,10 +99,12 @@ const Profile = () => {
 
   return (
     <div className="flex flex-col m-4 ">
-      {isAdmin ? <div> Hello admin!</div> : 
-      <div>
+      {isAdmin ? <div className="flex flex-row" > 
+        <div>Hello admin!</div>
+        <button onClick={()=>router.push("/pending-requests")}  > Show all pending requests</button>
+      </div> : 
+      <div className="flex flex-row" >
         <div>Hello team member</div>
-        {/* <Link href={{ pathname: '/profile/my-submissions', query: { pendingProducts: pendingProducts, } }} >Show all submissions</Link> */}
         <button onClick={()=>router.push("/profile/my-submissions")} >Show all submissions</button>
         </div>
       }
