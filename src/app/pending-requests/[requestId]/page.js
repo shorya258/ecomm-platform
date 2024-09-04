@@ -1,20 +1,19 @@
-"use client"
-import React, { useState } from 'react'
-import { useEffect } from 'react';
-import { useSearchParams } from 'next/navigation';
+"use client";
+import React, { useState } from "react";
+import { useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import { jwtDecode } from "jwt-decode";
-import { useRouter } from 'next/navigation';
+import { useRouter } from "next/navigation";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 const requestId = () => {
   const searchParams = useSearchParams();
-  const router=useRouter();
-  const[email, setEmail]= useState("");
-  const [pendingProduct, setPendingProduct]= useState([]);
-  const[status, setStatus]=useState("pending")
+  const router = useRouter();
+  const [email, setEmail] = useState("");
+  const [pendingProduct, setPendingProduct] = useState([]);
+  const [status, setStatus] = useState("pending");
   const setChangeStatus = async (changedStatus) => {
-
-    // console.log("status changed to", singleProduct,email,changedStatus);
+    console.log("status changed to", singleProduct,email,changedStatus);
 
     const response = await fetch(`/api/changeReviewStatus`, {
       method: "PUT",
@@ -29,13 +28,12 @@ const requestId = () => {
     });
     const json = await response.json();
     const statusCode = response.status;
-    if(statusCode===201){
-      toast.success("product ", changedStatus)
+    if (statusCode === 201) {
+      toast.success("product ", changedStatus);
       setStatus(changedStatus);
-      router.push('/pending-requests')
+      router.push("/pending-requests");
     }
     console.log(json);
-
   };
 
   useEffect(() => {
@@ -45,14 +43,13 @@ const requestId = () => {
       try {
         decodedPendingProduct = JSON.parse(decodeURIComponent(requestString));
         console.log(decodedPendingProduct.productDetails.image);
-        decodedPendingProduct.productDetails.image = decodedPendingProduct.productDetails.image.replace(
-          "images/",
-          "images%2F"
-        );
-        decodedPendingProduct.productDetails.image = decodedPendingProduct.productDetails.image.replace(
-          " ",
-          "%20"
-        );
+        decodedPendingProduct.productDetails.image =
+          decodedPendingProduct.productDetails.image.replace(
+            "images/",
+            "images%2F"
+          );
+        decodedPendingProduct.productDetails.image =
+          decodedPendingProduct.productDetails.image.replace(" ", "%20");
         console.log(decodedPendingProduct.productDetails.image);
         setPendingProduct(decodedPendingProduct);
       } catch (e) {
@@ -74,58 +71,131 @@ const requestId = () => {
   // },[status])
 
   return (
-    <div>
-      <ToastContainer/>
-      {
-        console.log(pendingProduct.productDetails?.productName)
-      }
-      {pendingProduct.productDetails?.productName}
+    <div className="p-5 m-5 text-white bg-white">
+      <ToastContainer />
+      {/* {pendingProduct.productDetails?.productName} */}
       <div>
-              <button
-                onClick={() => setChangeStatus("approved")}
-                className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-              >
-                Approve
-                <svg
-                  className="rtl:rotate-180 w-3.5 h-3.5 ms-2"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 14 10"
-                >
-                  <path
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M1 5h12m0 0L9 1m4 4L9 9"
-                  />
-                </svg>
-              </button>
-              <button
-                onClick={() => setChangeStatus("rejected")}
-                className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-red-700 rounded-lg hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800"
-              >
-                Reject
-                <svg
-                  className="rtl:rotate-180 w-3.5 h-3.5 ms-2"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 14 10"
-                >
-                  <path
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M1 5h12m0 0L9 1m4 4L9 9"
-                  />
-                </svg>
-              </button>
-            </div>
-      </div>
-  )
-}
+        <form className="grid justify-center ">
+          <div className="space-y-12">
+            <div className="border-b border-gray-900/10 pb-12">
+              <h2 className="font-semibold leading-7 text-gray-900 text-3xl ">
+                Product details
+              </h2>
+              <div className="mt-1 text-sm leading-6 text-gray-600">
+                <p> Approve or reject changes done to this product! </p>
+              </div>
 
-export default requestId
+              <div className="mt-10 flex flex-row ">
+                <div className="col-span-full mr-10 flex flex-col ">
+                  <label
+                    htmlFor="photo"
+                    className="block text-xl font-medium leading-6 text-gray-900"
+                  >
+                    Photo
+                  </label>
+                  <div className="mt-2 flex flex-col items-center gap-x-3">
+                    <div className="max-w-[200px] overflow-hidden h-auto ">
+                      {/* <Image src={product?.image} alt="product" width={200} height={200} /> */}
+                      <img
+                        src={pendingProduct.productDetails?.image}
+                        alt="product"
+                      />
+
+                      {/* {pendingProduct.productDetails.image} */}
+                    </div>
+                    {/* <UserCircleIcon aria-hidden="true" className="h-12 w-12 text-gray-300" /> */}
+                  </div>
+                </div>
+                <div className=" grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+                  <div className="sm:col-span-4">
+                    <label
+                      htmlFor="productName"
+                      className="block text-xl font-medium leading-6 text-gray-900"
+                    >
+                      Name
+                    </label>
+                    <div className="mt-2 text-black ">
+                      {pendingProduct.productDetails?.productName}
+                    </div>
+                  </div>
+
+                  <div className="col-span-full">
+                    <label
+                      htmlFor="productDescription"
+                      className="block text-xl font-medium leading-6 text-gray-900"
+                    >
+                      About
+                    </label>
+                    <div className="mt-2 text-black">
+                      {pendingProduct.productDetails?.productDescription}
+                    </div>
+                    {/* <p className="mt-3 text-sm leading-6 text-gray-600">Write a few sentences about yourself.</p> */}
+                  </div>
+                  <div className="col-span-full">
+                    <label
+                      htmlFor="price"
+                      className="block text-xl font-medium leading-6 text-gray-900"
+                    >
+                      Price 
+                    </label>
+                    <div className="mt-2 text-black">
+                      ${pendingProduct.productDetails?.price}
+                    </div>
+                    {/* <p className="mt-3 text-sm leading-6 text-gray-600">Write a few sentences about yourself.</p> */}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex flex-row justify-center mt-4" >
+            <button
+              onClick={() => setChangeStatus("approved")}
+              className="inline-flex items-center mr-5 px-3 py-2 text-sm font-medium text-center text-white bg-indigo-700 rounded-lg hover:bg-indigo-800 focus:ring-4 focus:outline-none focus:ring-indigo-300 dark:bg-indigo-600 dark:hover:bg-indigo-700 dark:focus:ring-indigo-800"
+            >
+              Approve
+              <svg
+                className="rtl:rotate-180 w-3.5 h-3.5 ms-2"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 14 10"
+              >
+                <path
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M1 5h12m0 0L9 1m4 4L9 9"
+                />
+              </svg>
+            </button>
+            <button
+              onClick={() => setChangeStatus("rejected")}
+              className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-red-700 rounded-lg hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800"
+            >
+              Reject
+              <svg
+                className="rtl:rotate-180 w-3.5 h-3.5 ms-2"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 14 10"
+              >
+                <path
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M1 5h12m0 0L9 1m4 4L9 9"
+                />
+              </svg>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+};
+
+export default requestId;

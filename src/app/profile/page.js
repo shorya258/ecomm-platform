@@ -5,7 +5,7 @@ import { jwtDecode } from "jwt-decode";
 import { useRouter } from "next/navigation";
 import ReviewedProductCard from "../Components/ReviewedProductCard";
 const Profile = () => {
-  const router= useRouter();
+  const router = useRouter();
   const [userEmail, setUserEmail] = useState("");
   const [adminEmail, setAdminEmail] = useState("");
   const [isAdmin, toggleIsAdmin] = useState(false);
@@ -99,35 +99,87 @@ const Profile = () => {
 
   return (
     <div className="flex flex-col m-4 ">
-      {isAdmin ? <div className="flex flex-row" > 
-        <div>Hello admin!</div>
-        <button onClick={()=>router.push("/pending-requests")}  > Show all pending requests</button>
-      </div> : 
-      <div className="flex flex-row" >
-        <div className="mr-3" >Hello team member</div>
-        <button onClick={()=>router.push("/profile/my-submissions")} >Show all submissions</button>
+      {isAdmin ? (
+        <div className="flex flex-row justify-between mx-4">
+          <div className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+            Hello admin!
+          </div>
+
+          <button
+                onClick={() => router.push("/pending-requests")}
+                className="inline-flex items-center mb-3 px-3 py-2 text-sm font-medium text-center text-white bg-indigo-700 rounded-lg hover:bg-indigo-800 focus:ring-4 focus:outline-none focus:ring-indigo-300 dark:bg-indigo-600 dark:hover:bg-indigo-700 dark:focus:ring-indigo-800"
+              >
+                Show all pending requests
+                <svg
+                  className="rtl:rotate-180 w-3.5 h-3.5 ms-2"
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 14 10"
+                >
+                  <path
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M1 5h12m0 0L9 1m4 4L9 9"
+                  />
+                </svg>
+              </button>
+          
+          {/* <button
+            className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white"
+            onClick={() => router.push("/pending-requests")}
+          >
+            {" "}
+            Show all pending requests
+            <svg
+              className="rtl:rotate-180 w-3.5 h-3.5 ms-2"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 14 10"
+            >
+              <path
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M1 5h12m0 0L9 1m4 4L9 9"
+              />
+            </svg>
+           
+          </button> */}
         </div>
-      }
+      ) : (
+        <div className="flex flex-row">
+          <div className="mr-3">Hello team member</div>
+          <button onClick={() => router.push("/profile/my-submissions")}>
+            Show all submissions
+          </button>
+        </div>
+      )}
       <div className="flex flex-row gap-3 max-w-0.8 border-b border-white pb-2">
         <button
           onClick={(e) => handleRequestsFilter(e, "pending")}
           className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600  "
         >
-          Pending Requests <span className=""> {pendingProducts.length} </span>
+          Pending Requests{" "}
+          <span className="ml-2"> {pendingProducts.length} </span>
         </button>
         <button
           onClick={(e) => handleRequestsFilter(e, "approved")}
           className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
         >
           Approved Requests{" "}
-          <span className=""> {approvedProducts.length} </span>
+          <span className="ml-2"> {approvedProducts.length} </span>
         </button>
         <button
           onClick={(e) => handleRequestsFilter(e, "rejected")}
           className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
         >
           Rejected Requests{" "}
-          <span className=""> {rejectedProducts.length} </span>
+          <span className="ml-2"> {rejectedProducts.length} </span>
         </button>
       </div>
       <br />
@@ -136,7 +188,7 @@ const Profile = () => {
           (approvedProducts.length === 0 ? (
             <div>No approved products to display yet!</div>
           ) : (
-            <div>
+            <div className="flex flex-row">
               {approvedProducts?.map((singleProduct) => {
                 return (
                   <div key={singleProduct._id}>
@@ -152,41 +204,46 @@ const Profile = () => {
               })}
             </div>
           ))}
-        {showRequests === "pending" && (
-          pendingProducts.length===0?<div>No pending products yet!</div>:<div>
-          {pendingProducts?.map((singleProduct) => {
-            return (
-              <div key={singleProduct._id}>
-                <ReviewedProductCard
-                  singleProduct={singleProduct}
-                  user={isAdmin ? "admin" : "team member"}
-                  requestStatus={"pending"}
-                  email={isAdmin ? adminEmail : userEmail}
-                  fetchAllData={fetchAllData}
-                />
-              </div>
-            );
-          })}
-        </div>
-        )}
-        {showRequests === "rejected" && (
-          rejectedProducts.length===0?<div>No rejected products yet!</div>:
-          <div>
-            {rejectedProducts?.map((singleProduct) => {
-              return (
-                <div key={singleProduct._id}>
-                  <ReviewedProductCard
-                    singleProduct={singleProduct}
-                    user={isAdmin ? "admin" : "team member"}
-                    requestStatus={"rejected"}
-                    email={isAdmin ? adminEmail : userEmail}
-                    fetchAllData={fetchAllData}
-                  />
-                </div>
-              );
-            })}
-          </div>
-        )}
+        {showRequests === "pending" &&
+          (pendingProducts.length === 0 ? (
+            <div>No pending products yet!</div>
+          ) : (
+            <div className="flex flex-row">
+              {pendingProducts?.map((singleProduct) => {
+                return (
+                  <div key={singleProduct._id}>
+                    <ReviewedProductCard
+                      singleProduct={singleProduct}
+                      user={isAdmin ? "admin" : "team member"}
+                      requestStatus={"pending"}
+                      email={isAdmin ? adminEmail : userEmail}
+                      fetchAllData={fetchAllData}
+                    />
+                  </div>
+                );
+              })}
+            </div>
+          ))}
+        {showRequests === "rejected" &&
+          (rejectedProducts.length === 0 ? (
+            <div>No rejected products yet!</div>
+          ) : (
+            <div className="flex flex-row">
+              {rejectedProducts?.map((singleProduct) => {
+                return (
+                  <div key={singleProduct._id} className="">
+                    <ReviewedProductCard
+                      singleProduct={singleProduct}
+                      user={isAdmin ? "admin" : "team member"}
+                      requestStatus={"rejected"}
+                      email={isAdmin ? adminEmail : userEmail}
+                      fetchAllData={fetchAllData}
+                    />
+                  </div>
+                );
+              })}
+            </div>
+          ))}
       </div>
     </div>
   );
