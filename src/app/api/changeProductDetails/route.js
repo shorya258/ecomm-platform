@@ -25,11 +25,9 @@ export async function PUT(req) {
       price: product.price,
       image: product.image
     })
-    .then(()=>{
-      return NextResponse.json(
-        { message: "product changed successfully by the admin" }, { status: 201 }
-      );
-    })
+    return NextResponse.json(
+      { message: "product changed successfully by the admin" }, { status: 201 }
+    );
   } catch (error) {
     console.log(error)
     return NextResponse.json(

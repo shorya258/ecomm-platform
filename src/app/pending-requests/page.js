@@ -28,7 +28,7 @@ const PendingRequests = () => {
       JSON.stringify(singlePendingProduct)
     );
     router.push(
-      `/pending-requests/${singlePendingProduct.product._id}?request=${requestString}`
+      `/pending-requests/${singlePendingProduct.product}?request=${requestString}`
     );
   };
   useEffect(() => {

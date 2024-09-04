@@ -14,7 +14,7 @@ const requestId = () => {
   const [status, setStatus] = useState("pending");
   const [highlightedValues, setHighlightedValues] = useState([])
   const setChangeStatus = async (changedStatus) => {
-    console.log("status changed to", singleProduct,email,changedStatus);
+    console.log("status changed to",changedStatus);
 
     const response = await fetch(`/api/changeReviewStatus`, {
       method: "PUT",
@@ -32,7 +32,7 @@ const requestId = () => {
     if (statusCode === 201) {
       toast.success("product ", changedStatus);
       setStatus(changedStatus);
-      router.push("/pending-requests");
+      router.push("/dashboard",{ replace: true });
     }
     console.log(json);
   };

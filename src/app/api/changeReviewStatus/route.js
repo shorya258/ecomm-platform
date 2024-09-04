@@ -7,7 +7,7 @@ export async function PUT(req) {
       const body = await req.json();
       const { review, adminEmail, status} = body;
       console.log("review",review);
-      if (!review._id || !review.productDetails || !adminEmail || !status ) {
+      if (!review._id || !review.product || !adminEmail || !status ) {
         return NextResponse.json(
           { error: "Missing review fields", review, adminEmail, status},{ status: 400 }
         );
@@ -18,13 +18,10 @@ export async function PUT(req) {
         adminEmail,
         status
       })
-      .then(()=>{
-        console.log( review.productDetails , "review.productDetails");
-        deleteProductUpdation(review.productDetails._id)
-        return NextResponse.json(
-          { message: "product changed successfully by the admin" }, { status: 201 }
-        );
-      })
+      deleteProductUpdation(review.product)
+      return NextResponse.json(
+        { message: "product changed successfully by the admin" }, { status: 201 }
+      );
     } catch (error) {
       console.log(error)
       return NextResponse.json(
