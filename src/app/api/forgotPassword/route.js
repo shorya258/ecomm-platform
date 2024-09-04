@@ -1,15 +1,9 @@
-import nodemailer from 'nodemailer';
+import { Resend } from 'resend';
 import jwt from 'jsonwebtoken';
 import { NextResponse } from "next/server";
-// Set up your email transporter
-const transporter = nodemailer.createTransport({
-  service: 'Gmail', // or any other email service
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-});
+
 console.log(process.env.EMAIL_USER, process.env.EMAIL_PASS , "creds");
+const resend = new Resend('re_3YKKHEbA_GZuZCfXP5jRY91EguQjJJZH3');
 
 export async function POST(req) {
   const body = await req.json();
@@ -27,17 +21,15 @@ export async function POST(req) {
   // Construct the magic link
   const magicLink = `${process.env.API_URL}/api/oneTimeLogin/?token=${token}`;
   console.log(magicLink);
-  // Email content
-  const mailOptions = {
-    from: process.env.EMAIL_USER,
-    to: email,
-    subject: 'Your One Time Link To Login',
-    text:"TEST TEXT"
-    // html: `<p>Click <a href="${magicLink}">here</a> to log in.</p>`,
-  };
 
   try {
-    transporter.sendMail(mailOptions).then(res => console.log(res));
+    resend.emails.send({
+      from: 'Acme <onboarding@resend.dev>',
+      to: [email],
+      subject: 'LOGIN LINK ON FORGOT PASSWORD',
+      html: `This link is valid for one hour only.
+      <br><p>${magicLink}</p>`,
+    }).then(res => console.log(res))
     return NextResponse.json(
         { message: 'Magic link sent!' },
         { status: 200 }
