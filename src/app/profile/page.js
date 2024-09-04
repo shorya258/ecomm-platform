@@ -2,9 +2,7 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import { jwtDecode } from "jwt-decode";
-import ApprovedRequests from "../Components/ApprovedRequests";
-import PendingRequests from "../Components/PendingRequests";
-import RejectedRequests from "../Components/RejectedRequests";
+import ReviewedProductCard from "../Components/ReviewedProductCard";
 const Product = () => {
   const [userEmail, setUserEmail] = useState("");
   const [adminEmail, setAdminEmail] = useState("");
@@ -106,7 +104,7 @@ const Product = () => {
           Pending Requests <span className=""> {pendingProducts.length} </span>
         </button>
         <button
-          onClick={(e) => handleRequestsFilter(e, "accepted")}
+          onClick={(e) => handleRequestsFilter(e, "approved")}
           className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
         >
           Approved Requests{" "}
@@ -122,14 +120,50 @@ const Product = () => {
       </div>
       <br />
       <div>
-        {showRequests === "accepted" && (
-          <ApprovedRequests approvedProducts={approvedProducts} />
+        {showRequests === "approved" && (
+          <div>
+            {approvedProducts?.map((singleProduct) => {
+              return (
+                <div key={singleProduct._id}>
+                  <ReviewedProductCard
+                    singleProduct={singleProduct}
+                    user={isAdmin ? "admin" : "team member"}
+                    requestStatus={"approved"}
+                  />
+                </div>
+              );
+            })}
+          </div>
         )}
         {showRequests === "pending" && (
-          <PendingRequests pendingProducts={pendingProducts} />
+          <div>
+            {pendingProducts?.map((singleProduct) => {
+              return (
+                <div key={singleProduct._id}>
+                  <ReviewedProductCard
+                    singleProduct={singleProduct}
+                    user={isAdmin ? "admin" : "team member"}
+                    requestStatus={"pending"}
+                  />
+                </div>
+              );
+            })}
+          </div>
         )}
         {showRequests === "rejected" && (
-          <RejectedRequests rejectedProducts={rejectedProducts} />
+          <div>
+            {rejectedProducts?.map((singleProduct) => {
+              return (
+                <div key={singleProduct._id}>
+                  <ReviewedProductCard
+                    singleProduct={singleProduct}
+                    user={isAdmin ? "admin" : "team member"}
+                    requestStatus={"rejected"}
+                  />
+                </div>
+              );
+            })}
+          </div>
         )}
       </div>
     </div>
