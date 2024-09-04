@@ -28,7 +28,7 @@ const PendingRequests = () => {
       JSON.stringify(singlePendingProduct)
     );
     router.push(
-      `/pending-requests/${singlePendingProduct.productDetails.id}?request=${requestString}`
+      `/pending-requests/${singlePendingProduct.product._id}?request=${requestString}`
     );
   };
   useEffect(() => {
@@ -54,15 +54,15 @@ const PendingRequests = () => {
                   <div href="/" className=" h-48 overflow-hidden ">
                     <img
                       className="rounded-t-lg w-full h-full object-cover "
-                      src={singlePendingProduct.productDetails.image}
+                      src={singlePendingProduct.image}
                       alt="product card image"
                       width={200}
                     />
                   </div>
                   <div className="p-5" >
-                  <div className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white" >{singlePendingProduct.productDetails.productName}</div>
-                  <div className="mb-10 font-normal text-gray-700 dark:text-gray-400 overflow-hidden" >{singlePendingProduct.productDetails.productDescription}</div>
-                  <div>Price: $ {singlePendingProduct.productDetails.price}</div>
+                  <div className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white" >{singlePendingProduct.productName}</div>
+                  <div className="mb-10 font-normal text-gray-700 dark:text-gray-400 overflow-hidden" >{singlePendingProduct.productDescription}</div>
+                  <div>Price: $ {singlePendingProduct.price}</div>
                   </div>
                   <button
                     className="rounded-md bg-indigo-600 px-3 py-2 text-xl font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"

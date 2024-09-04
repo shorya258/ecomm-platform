@@ -12,30 +12,22 @@ const reviewSchema = new Schema(
       type:String,
       required:true,
     },
-    productDetails:{
-      
-      productName: {
-        type: String,
-        required: true,
-      },
-      
-      price:{
-          type:String,
-      },
-      image:{
-        type: String,
-      },
-      productDescription:{
-        type: String,
-      },
-      department: {
-        type: String,
-      },
-      id: {
-        type: Number,
-        required: true,
-      }
+    productName: {
+      type: String,
     },
+    price:{
+        type:String,
+    },
+    image:{
+      type: String,
+    },
+    productDescription:{
+      type: String,
+    },
+    department: {
+      type: String,
+    },
+    product: { type: mongoose.Schema.Types.ObjectId, ref: 'Product', required: true },
   },
   { 
     timestamps: true

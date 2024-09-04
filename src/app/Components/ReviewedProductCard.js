@@ -38,7 +38,7 @@ useEffect(() => {
         <div href="/" className=" h-48 overflow-hidden ">
           <img
             className="rounded-t-lg w-full h-full object-cover "
-            src={singleProduct.productDetails.image}
+            src={singleProduct.image}
             alt="product card image"
             width={200}
           />
@@ -48,14 +48,14 @@ useEffect(() => {
           <div>
             <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
               {" "}
-              {singleProduct.productDetails.productName}{" "}
+              {singleProduct.productName}{" "}
             </h5>
           </div>
           <p className="mb-3 font-normal text-gray-700 dark:text-gray-400 overflow-hidden ">
-            {singleProduct.productDetails.productDescription}
+            {singleProduct.productDescription}
           </p>
           <p className="mb-3 font-normal text-gray-700 dark:text-gray-400 overflow-hidden ">
-            Price: ${singleProduct.productDetails.price}
+            Price: ${singleProduct.price}
           </p>
           {user === "admin" && requestStatus === "pending" && (
             <div>

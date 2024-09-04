@@ -1,6 +1,7 @@
 import Product from "../../../models/Product";
 import { connectToDatabase } from "@/lib/mongoose";
 import { NextResponse } from "next/server";
+import { createProductUpdationByDetails } from "../productUpdation/route";
 const axios= require('axios');
 const mongoose = require('mongoose');
 const apiURL = "https://64e0caef50713530432cafa1.mockapi.io/api/products";
@@ -25,16 +26,10 @@ export async function PUT(req) {
       image: product.image
     })
     .then(()=>{
-      console.log("success")
+      return NextResponse.json(
+        { message: "product changed successfully by the admin" }, { status: 201 }
+      );
     })
-    .catch((error)=>{
-      console.log("failed", error)
-    })
-    // updatedProduct.save();
-    // await existingProduct.save();
-    return NextResponse.json(
-      { message: "product changed successfully by the admin" }, { status: 201 }
-    );
   } catch (error) {
     console.log(error)
     return NextResponse.json(

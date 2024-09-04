@@ -12,6 +12,7 @@ const requestId = () => {
   const [email, setEmail] = useState("");
   const [pendingProduct, setPendingProduct] = useState([]);
   const [status, setStatus] = useState("pending");
+  const [highlightedValues, setHighlightedValues] = useState([])
   const setChangeStatus = async (changedStatus) => {
     console.log("status changed to", singleProduct,email,changedStatus);
 
@@ -35,29 +36,58 @@ const requestId = () => {
     }
     console.log(json);
   };
-
+  const fetchProductUpdations = async () => {
+    const response = await fetch(`/api/productUpdation`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      }
+    });
+    const res = await response.json();
+    const statusCode = response.status;
+    console.log(res.productUpdations, "productUpdations");
+    if (statusCode === 201) {
+      console.log(pendingProduct);
+      res.productUpdations.forEach(productUpdation => {
+        console.log(productUpdation.product , pendingProduct.product);
+        if(productUpdation.product === pendingProduct.product) {
+          setHighlightedValues(productUpdation.changedKeys);
+        }
+      })
+    }
+  }
+  useEffect(() => {
+    fetchProductUpdations()
+  },[pendingProduct])
   useEffect(() => {
     const requestString = searchParams.get("request");
     let decodedPendingProduct = null;
     if (requestString) {
       try {
         decodedPendingProduct = JSON.parse(decodeURIComponent(requestString));
-        console.log(decodedPendingProduct.productDetails.image);
-        decodedPendingProduct.productDetails.image =
-          decodedPendingProduct.productDetails.image.replace(
+        console.log(decodedPendingProduct.image);
+        decodedPendingProduct.image =
+          decodedPendingProduct.image.replace(
             "images/",
             "images%2F"
           );
-        decodedPendingProduct.productDetails.image =
-          decodedPendingProduct.productDetails.image.replace(" ", "%20");
-        console.log(decodedPendingProduct.productDetails.image);
+        decodedPendingProduct.image =
+          decodedPendingProduct.image.replace(" ", "%20");
+        console.log(decodedPendingProduct.image);
         setPendingProduct(decodedPendingProduct);
       } catch (e) {
         console.error("Error parsing product data:", e);
       }
     }
   }, []);
-
+  const checkHighlighted = (value) => {
+    console.log(highlightedValues);
+    console.log(value);
+    highlightedValues.forEach(values => {
+      console.log(values === value)
+    })
+    return highlightedValues.includes(value);
+  }
   useEffect(() => {
     let authStorageToken = localStorage.getItem("authStorageToken");
     const decodedData = jwtDecode(authStorageToken);
@@ -97,7 +127,8 @@ const requestId = () => {
                     <div className="max-w-[200px] overflow-hidden h-auto ">
                       {/* <Image src={product?.image} alt="product" width={200} height={200} /> */}
                       <img
-                        src={pendingProduct.productDetails?.image}
+                        src={pendingProduct.image}
+                        className={checkHighlighted("productImage") ? `rounded-md border border-yellow-500` : ""}
                         alt="product"
                       />
 
@@ -107,7 +138,7 @@ const requestId = () => {
                   </div>
                 </div>
                 <div className=" grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-                  <div className="sm:col-span-4">
+                  <div className={checkHighlighted("productName") ? `rounded-md border border-yellow-500 bor sm:col-span-4` : "sm:col-span-4"}>
                     <label
                       htmlFor="productName"
                       className="block text-xl font-medium leading-6 text-gray-900"
@@ -115,11 +146,11 @@ const requestId = () => {
                       Name
                     </label>
                     <div className="mt-2 text-black ">
-                      {pendingProduct.productDetails?.productName}
+                      {pendingProduct.productName}
                     </div>
                   </div>
 
-                  <div className="col-span-full">
+                  <div className={checkHighlighted("productDescription") ? `rounded-md border border-yellow-500 sm:col-span-4` : "sm:col-span-4"}>
                     <label
                       htmlFor="productDescription"
                       className="block text-xl font-medium leading-6 text-gray-900"
@@ -127,11 +158,11 @@ const requestId = () => {
                       About
                     </label>
                     <div className="mt-2 text-black">
-                      {pendingProduct.productDetails?.productDescription}
+                      {pendingProduct.productDescription}
                     </div>
                     {/* <p className="mt-3 text-sm leading-6 text-gray-600">Write a few sentences about yourself.</p> */}
                   </div>
-                  <div className="col-span-full">
+                  <div className={checkHighlighted("price") ? `rounded-md border border-yellow-500 sm:col-span-4` : "sm:col-span-4"}>
                     <label
                       htmlFor="price"
                       className="block text-xl font-medium leading-6 text-gray-900"
@@ -139,7 +170,7 @@ const requestId = () => {
                       Price 
                     </label>
                     <div className="mt-2 text-black">
-                      ${pendingProduct.productDetails?.price}
+                      ${pendingProduct.price}
                     </div>
                     {/* <p className="mt-3 text-sm leading-6 text-gray-600">Write a few sentences about yourself.</p> */}
                   </div>

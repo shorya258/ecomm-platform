@@ -1,6 +1,7 @@
 import Review from "../../../models/Review";
 import { connectToDatabase } from "@/lib/mongoose";
 import { NextResponse } from "next/server";
+import { deleteProductUpdation } from "../productUpdation/route";
 export async function PUT(req) {
     try {
       const body = await req.json();
@@ -18,14 +19,12 @@ export async function PUT(req) {
         status
       })
       .then(()=>{
-        console.log("success")
+        console.log( review.productDetails , "review.productDetails");
+        deleteProductUpdation(review.productDetails._id)
+        return NextResponse.json(
+          { message: "product changed successfully by the admin" }, { status: 201 }
+        );
       })
-      .catch((error)=>{
-        console.log("failed", error)
-      })
-      return NextResponse.json(
-        { message: "product changed successfully by the admin" }, { status: 201 }
-      );
     } catch (error) {
       console.log(error)
       return NextResponse.json(
