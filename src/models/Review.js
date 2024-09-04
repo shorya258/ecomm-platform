@@ -41,5 +41,5 @@ const reviewSchema = new Schema(
     timestamps: true
  }
 ); // department, id, image, price, productDescription, productName
-const Review= mongoose.models.reviewSchema|| mongoose.model("Review", reviewSchema)
+const Review= mongoose.models.Review|| mongoose.model("Review", reviewSchema)
 export default Review;

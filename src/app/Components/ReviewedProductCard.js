@@ -1,15 +1,11 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
-const ReviewedProductCard = (product, user, requestStatus) => {
+const ReviewedProductCard = ({singleProduct, user, requestStatus}) => {
   const router = useRouter();
-  const { productName, price, image, productDescription, department, id } =
-    product;
-//   const navigateToProductPage = () => {
-//     const productString = encodeURIComponent(JSON.stringify(product));
-//     router.push(`product/${id}?product=${productString}`);
-//   };
-
+//   const { productName, price, image, productDescription, department, id } =
+//   singleProduct;
+    console.log(singleProduct.productDetails.image);
 const setChangeStatus=(status)=>{
 
 }
@@ -20,7 +16,7 @@ const setChangeStatus=(status)=>{
         <div href="/" className=" h-48 overflow-hidden ">
           <img
             className="rounded-t-lg w-full h-full object-cover "
-            src={image}
+            src={singleProduct.productDetails.image}
             alt="product card image"
             width={200}
           />
@@ -30,11 +26,11 @@ const setChangeStatus=(status)=>{
           <div>
             <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
               {" "}
-              {productName}{" "}
+              {singleProduct.productDetails.productName}{" "}
             </h5>
           </div>
           <p className="mb-3 font-normal text-gray-700 dark:text-gray-400 overflow-hidden ">
-            {productDescription}
+            {singleProduct.productDetails.productDescription}
           </p>
           {user === "admin" && requestStatus === "pending" && (
             <div>

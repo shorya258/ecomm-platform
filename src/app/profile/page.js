@@ -40,7 +40,7 @@ const Product = () => {
       }),
     });
     const json = await response.json();
-    console.log(json);
+    // console.log(json);
     setPendingProducts(json.reviews);
   };
   const fetchApprovedProducts = async (email, user) => {
@@ -56,7 +56,7 @@ const Product = () => {
       }),
     });
     const json = await response.json();
-    console.log(json);
+    // console.log(json);
     setApprovedProducts(json.reviews);
   };
   const fetchRejectedProducts = async (email, user) => {
@@ -72,7 +72,7 @@ const Product = () => {
       }),
     });
     const json = await response.json();
-    console.log(json);
+    // console.log(json);
     setRejectedProducts(json.reviews);
   };
 
