@@ -6,11 +6,16 @@ import { jwtDecode } from "jwt-decode";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { storage, db } from "../../../../firebaseConfig";
-import { ref, uploadBytesResumable, getDownloadURL,uploadBytes } from "firebase/storage";
+import {
+  ref,
+  uploadBytesResumable,
+  getDownloadURL,
+  uploadBytes,
+} from "firebase/storage";
 import "react-advanced-cropper/dist/style.css";
 import Cropper from "react-easy-crop";
 import getCroppedImg from "./getCroppedImage";
-import {  collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 const productId = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -42,6 +47,7 @@ const productId = () => {
   const [zoom, setZoom] = useState(1);
   const [croppedImage, setCroppedImage] = useState(null);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
+  const [showButton, toggleShowButton]= useState("choose");
 
   async function convertBlobToFile(blobUrl, fileName) {
     const response = await fetch(blobUrl);
@@ -56,24 +62,25 @@ const productId = () => {
   }
 
   async function handleUpload(blobUrl) {
-      if (!image) {
-        alert("Please select an image to upload");
-        return;
-      }
+    if (!image) {
+      alert("Please select an image to upload");
+      return;
+    }
     try {
       const file = await convertBlobToFile(blobUrl, product.productName);
       const downloadURL = await uploadFileToFirebaseStorage(file);
       let oldProduct = product;
       oldProduct.image = downloadURL;
-      setProduct(oldProduct)
-      setImage(null)
-      console.log('File uploaded and URL saved successfully:', downloadURL);
+      setProduct(oldProduct);
+      setImage(null);
+      console.log("File uploaded and URL saved successfully:", downloadURL);
     } catch (error) {
-      console.error('Error uploading file:', error);
+      console.error("Error uploading file:", error);
     }
   }
-  
+
   const handleImageChange = (e) => {
+    toggleShowButton("upload")
     if (e.target.files[0]) {
       let value = URL.createObjectURL(e.target.files[0]);
       setImage(value);
@@ -90,7 +97,7 @@ const productId = () => {
   };
 
   const handleSaveChanges = async (product) => {
-    if (areProductsEqual(product,initialProduct)){
+    if (areProductsEqual(product, initialProduct)) {
       toast.error("Make some changes to the values first!");
       return;
     }
@@ -120,27 +127,27 @@ const productId = () => {
     }
   };
 
-  const areProductsEqual=(product1, product2)=> {
+  const areProductsEqual = (product1, product2) => {
     const keys1 = Object.keys(product1);
     const keys2 = Object.keys(product2);
-  
+
     // Check if both objects have the same number of keys
     if (keys1.length !== keys2.length) {
       return false;
     }
-  
+
     // Check if all keys and values are the same in both objects
     for (let key of keys1) {
       if (product1[key] !== product2[key]) {
         return false;
       }
     }
-  
+
     return true;
-  }
+  };
 
   const handleSaveForReview = async (product) => {
-    if (areProductsEqual(product,initialProduct)){
+    if (areProductsEqual(product, initialProduct)) {
       toast.error("Make some changes to the values first!");
       return;
     }
@@ -173,7 +180,7 @@ const productId = () => {
   };
 
   const onChange = (e) => {
-    console.log(e.target.name, e.target.value)
+    console.log(e.target.name, e.target.value);
     setProduct({ ...product, [e.target.name]: e.target.value });
   };
   const src = product.image;
@@ -191,7 +198,7 @@ const productId = () => {
           "images%2F"
         );
         console.log(decodedProduct.image);
-        setInitialProduct(decodedProduct)
+        setInitialProduct(decodedProduct);
         setProduct(decodedProduct);
       } catch (e) {
         console.error("Error parsing product data:", e);
@@ -247,9 +254,9 @@ const productId = () => {
           </button>
         </>
       )}
-      <div className="p-5 m-5 text-white bg-white">
+      <div className="p-5 m-5 grid justify-center ">
         <ToastContainer />
-        <form className="grid justify-center ">
+        <form className="grid justify-center bg-white rounded-xl p-10 ">
           <div className="space-y-12">
             <div className="border-b border-gray-900/10 pb-12">
               <h2 className="font-semibold leading-7 text-gray-900 text-3xl ">
@@ -266,27 +273,27 @@ const productId = () => {
               </div>
 
               <div className="mt-10 flex flex-row ">
-                <div className="col-span-full mr-10 flex flex-col ">
-                  <label
-                    htmlFor="photo"
-                    className="block text-xl font-medium leading-6 text-gray-900"
-                  >
-                    Photo
-                  </label>
+                <div className="col-span-full flex flex-col ">
                   <div className="mt-2 flex flex-col items-center gap-x-3">
-                    <div className="max-w-[200px] overflow-hidden h-auto ">
+                    <div className="max-w-[200px] overflow-hidden h-auto mr-4">
                       <img src={product.image} alt="product" />
-
                     </div>
-                    <div>
-                      <input type="file" onChange={handleImageChange} />
-                      <button
-                        onClick={handleUpload}
-                        disabled={uploading}
-                        className="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-                      >
-                        {uploading ? "Uploading..." : "Upload Image"}
-                      </button>
+                    <div className="flex flex-col mt-4 justify-center items-center ">
+                      <div>
+                        <label className="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                          Choose Image
+                          <input type="file" className="hidden" onChange={handleImageChange}/>
+                        </label>
+                      </div>
+                      {/* <div>
+                        <button
+                          onClick={handleUpload}
+                          disabled={uploading}
+                          className="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+                        >
+                          {uploading ? "Uploading..." : "Upload Image"}
+                        </button>
+                      </div> */}
                       {progress > 0 && <progress value={progress} max="100" />}
                     </div>
                   </div>
@@ -306,6 +313,46 @@ const productId = () => {
                           name="productName"
                           type="text"
                           value={product.productName}
+                          onChange={onChange}
+                          className="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="sm:col-span-4">
+                    <label
+                      htmlFor="price"
+                      className="block text-xl font-medium leading-6 text-gray-900"
+                    >
+                      Price (in dollars)
+                    </label>
+                    <div className="mt-2">
+                      <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
+                        <input
+                          id="price"
+                          name="price"
+                          type="number"
+                          value={product.price}
+                          onChange={onChange}
+                          className="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="sm:col-span-4">
+                    <label
+                      htmlFor="price"
+                      className="block text-xl font-medium leading-6 text-gray-900"
+                    >
+                      Department
+                    </label>
+                    <div className="mt-2">
+                      <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
+                        <input
+                          id="department"
+                          name="department"
+                          type="text"
+                          value={product.department}
                           onChange={onChange}
                           className="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
                         />
@@ -341,7 +388,7 @@ const productId = () => {
             <button
               type="button"
               className="text-xl font-semibold leading-6 text-gray-900"
-              onClick={()=>(router.push('/dashboard'))}
+              onClick={() => router.push("/dashboard")}
             >
               Cancel
             </button>
