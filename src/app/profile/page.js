@@ -99,17 +99,53 @@ const Profile = () => {
 
   return (
     <div className="flex flex-col m-4 ">
-      {isAdmin ? (
-        <div className="flex flex-row justify-between mx-4">
-          <div className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-            Hello admin!
-          </div>
-
+      <div className="flex flex-row justify-between">
+        <div className="flex ">
           <button
-            onClick={() => router.push("/pending-requests")}
+            onClick={() => router.push("/dashboard")}
+            className="inline-flex items-center mb-3 mr-2 px-3 py-2 text-sm font-medium text-center text-white bg-indigo-700 rounded-lg hover:bg-indigo-800 focus:ring-4 focus:outline-none focus:ring-indigo-300 dark:bg-indigo-600 dark:hover:bg-indigo-700 dark:focus:ring-indigo-800"
+          >
+            <svg
+              className="rtl:rotate-180 w-3.5 h-3.5 mr-2"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 14 10"
+            >
+              <path
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M13 5H1m0 0l4-4m-4 4l4 4"
+              />
+            </svg>
+            Dashboard
+          </button>
+          {isAdmin ? (
+            <div className="flex flex-row justify-between mx-4">
+              <div className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+                Hello admin!
+              </div>
+            </div>
+          ) : (
+            <div className="flex flex-row">
+              <div className="mr-3 mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+                Hello team member
+              </div>
+            </div>
+          )}
+        </div>
+        <div>
+          <button
+            onClick={() => {
+              isAdmin
+                ? router.push("/pending-requests")
+                : router.push("/profile/my-submissions");
+            }}
             className="inline-flex items-center mb-3 px-3 py-2 text-sm font-medium text-center text-white bg-indigo-700 rounded-lg hover:bg-indigo-800 focus:ring-4 focus:outline-none focus:ring-indigo-300 dark:bg-indigo-600 dark:hover:bg-indigo-700 dark:focus:ring-indigo-800"
           >
-            Show all pending requests
+            {isAdmin ? "Show all pending requests" : "Show all submissions"}
             <svg
               className="rtl:rotate-180 w-3.5 h-3.5 ms-2"
               aria-hidden="true"
@@ -126,39 +162,8 @@ const Profile = () => {
               />
             </svg>
           </button>
-
-          {/* <button
-            className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white"
-            onClick={() => router.push("/pending-requests")}
-          >
-            {" "}
-            Show all pending requests
-            <svg
-              className="rtl:rotate-180 w-3.5 h-3.5 ms-2"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 14 10"
-            >
-              <path
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M1 5h12m0 0L9 1m4 4L9 9"
-              />
-            </svg>
-           
-          </button> */}
         </div>
-      ) : (
-        <div className="flex flex-row">
-          <div className="mr-3">Hello team member</div>
-          <button onClick={() => router.push("/profile/my-submissions")}>
-            Show all submissions
-          </button>
-        </div>
-      )}
+      </div>
       <div className="flex flex-row gap-3 max-w-0.8 border-b border-white pb-2">
         <button
           onClick={(e) => handleRequestsFilter(e, "pending")}

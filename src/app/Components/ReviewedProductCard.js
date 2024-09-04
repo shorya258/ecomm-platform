@@ -34,7 +34,7 @@ useEffect(() => {
 
 
   return (
-      <div className="m-5 max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 w-64 min-h-[400px] ">
+      <div className="relative bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 w-[300px] min-h-[500px] m-5 flex flex-col">
         <div href="/" className=" h-48 overflow-hidden ">
           <img
             className="rounded-t-lg w-full h-full object-cover "
@@ -58,7 +58,7 @@ useEffect(() => {
             Price: ${singleProduct.productDetails.price}
           </p>
           {user === "admin" && requestStatus === "pending" && (
-            <div>
+            <div className="absolute bottom-0 m-3" >
               <button
                 onClick={() => setChangeStatus("approved")}
                 className="inline-flex items-center mr-5 px-3 py-2 text-sm font-medium text-center text-white bg-indigo-700 rounded-lg hover:bg-indigo-800 focus:ring-4 focus:outline-none focus:ring-indigo-300 dark:bg-indigo-600 dark:hover:bg-indigo-700 dark:focus:ring-indigo-800"
