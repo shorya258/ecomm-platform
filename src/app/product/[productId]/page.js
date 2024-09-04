@@ -16,6 +16,14 @@ import { FixedCropper, ImageRestriction } from 'react-advanced-cropper'
 const productId = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const [initialProduct, setInitialProduct] = useState({
+    id: "",
+    productName: "",
+    price: "",
+    department: "",
+    image: "",
+    productDescription: "",
+  });
   const [product, setProduct] = useState({
     id: "",
     productName: "",
@@ -89,6 +97,10 @@ const productId = () => {
   };
 
   const handleSaveChanges = async (product) => {
+    if (areProductsEqual(product,initialProduct)){
+      toast.error("Make some changes to the values first!");
+      return;
+    }
     console.log("handleSaveChanges called", product);
 
     const response = await fetch(`/api/changeProductDetails`, {
@@ -115,7 +127,30 @@ const productId = () => {
     }
   };
 
+  const areProductsEqual=(product1, product2)=> {
+    const keys1 = Object.keys(product1);
+    const keys2 = Object.keys(product2);
+  
+    // Check if both objects have the same number of keys
+    if (keys1.length !== keys2.length) {
+      return false;
+    }
+  
+    // Check if all keys and values are the same in both objects
+    for (let key of keys1) {
+      if (product1[key] !== product2[key]) {
+        return false;
+      }
+    }
+  
+    return true;
+  }
+
   const handleSaveForReview = async (product) => {
+    if (areProductsEqual(product,initialProduct)){
+      toast.error("Make some changes to the values first!");
+      return;
+    }
     console.log("handleSaveForReview called", userEmail);
     const response = await fetch(`/api/productForReview`, {
       method: "POST",
@@ -136,6 +171,7 @@ const productId = () => {
     console.log(json.status);
     if (statusCode === 201) {
       toast.success("Item added for review!");
+      router.push("/dashboard");
     } else if (statusCode === 400) {
       toast.error(json.error);
     } else {
@@ -144,6 +180,7 @@ const productId = () => {
   };
 
   const onChange = (e) => {
+    console.log(e.target.name, e.target.value)
     setProduct({ ...product, [e.target.name]: e.target.value });
   };
   const src = product.image;
@@ -161,6 +198,7 @@ const productId = () => {
           "images%2F"
         );
         console.log(decodedProduct.image);
+        setInitialProduct(decodedProduct)
         setProduct(decodedProduct);
       } catch (e) {
         console.error("Error parsing product data:", e);
@@ -262,7 +300,7 @@ const productId = () => {
                 <div className=" grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
                   <div className="sm:col-span-4">
                     <label
-                      htmlFor="username"
+                      htmlFor="productName"
                       className="block text-xl font-medium leading-6 text-gray-900"
                     >
                       Name
@@ -271,8 +309,8 @@ const productId = () => {
                       <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
                         <input
                           id="productname"
-                          name="productname"
-                          type="productname"
+                          name="productName"
+                          type="text"
                           value={product.productName}
                           onChange={onChange}
                           className="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
@@ -308,7 +346,8 @@ const productId = () => {
           <div className="mt-6 flex items-center justify-center gap-x-6">
             <button
               type="button"
-              className="text-sm font-semibold leading-6 text-gray-900"
+              className="text-xl font-semibold leading-6 text-gray-900"
+              onClick={()=>(router.push('/dashboard'))}
             >
               Cancel
             </button>

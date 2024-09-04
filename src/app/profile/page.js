@@ -104,7 +104,7 @@ const Profile = () => {
         <button onClick={()=>router.push("/pending-requests")}  > Show all pending requests</button>
       </div> : 
       <div className="flex flex-row" >
-        <div>Hello team member</div>
+        <div className="mr-3" >Hello team member</div>
         <button onClick={()=>router.push("/profile/my-submissions")} >Show all submissions</button>
         </div>
       }
