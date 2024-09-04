@@ -1,18 +1,16 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { PhotoIcon, UserCircleIcon } from "@heroicons/react/24/solid";
 import { jwtDecode } from "jwt-decode";
-import Image from "next/image";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { storage, db } from "../../../../firebaseConfig";
-import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-import { collection, addDoc } from "firebase/firestore";
-import { CropperRef, Cropper } from "react-advanced-cropper";
+import { ref, uploadBytesResumable, getDownloadURL,uploadBytes } from "firebase/storage";
 import "react-advanced-cropper/dist/style.css";
-import { FixedCropper, ImageRestriction } from 'react-advanced-cropper'
+import Cropper from "react-easy-crop";
+import getCroppedImg from "./getCroppedImage";
+import {  collection, addDoc, serverTimestamp } from 'firebase/firestore';
 const productId = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -39,52 +37,47 @@ const productId = () => {
   const [image, setImage] = useState(null);
   const [progress, setProgress] = useState(0);
   const [uploading, setUploading] = useState(false);
+  const [crop, setCrop] = useState({ x: 0, y: 0 });
+  const [rotation, setRotation] = useState(0);
+  const [zoom, setZoom] = useState(1);
+  const [croppedImage, setCroppedImage] = useState(null);
+  const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
 
+  async function convertBlobToFile(blobUrl, fileName) {
+    const response = await fetch(blobUrl);
+    const blob = await response.blob();
+    return new File([blob], fileName, { type: blob.type });
+  }
+  async function uploadFileToFirebaseStorage(file) {
+    const storageRef = ref(storage, `images/${file.name}`);
+    const snapshot = await uploadBytes(storageRef, file);
+    const downloadURL = await getDownloadURL(snapshot.ref);
+    return downloadURL;
+  }
+
+  async function handleUpload(blobUrl) {
+      if (!image) {
+        alert("Please select an image to upload");
+        return;
+      }
+    try {
+      const file = await convertBlobToFile(blobUrl, product.productName);
+      const downloadURL = await uploadFileToFirebaseStorage(file);
+      let oldProduct = product;
+      oldProduct.image = downloadURL;
+      setProduct(oldProduct)
+      setImage(null)
+      console.log('File uploaded and URL saved successfully:', downloadURL);
+    } catch (error) {
+      console.error('Error uploading file:', error);
+    }
+  }
+  
   const handleImageChange = (e) => {
     if (e.target.files[0]) {
-      setImage(e.target.files[0]);
+      let value = URL.createObjectURL(e.target.files[0]);
+      setImage(value);
     }
-  };
-  const handleUpload = async () => {
-    if (!image) {
-      alert("Please select an image to upload");
-      return;
-    }
-
-    setUploading(true);
-    const storageRef = ref(storage, `images/${image.name}`);
-    const uploadTask = uploadBytesResumable(storageRef, image);
-
-    uploadTask.on(
-      "state_changed",
-      (snapshot) => {
-        const progress =
-          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        setProgress(progress);
-      },
-      (error) => {
-        console.error("Upload failed:", error);
-        setUploading(false);
-      },
-      async () => {
-        try {
-          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-            console.log(`Upload successful! File available at ${downloadURL}`);
-            let oldProduct = product;
-            oldProduct.image = downloadURL;
-            setProduct(oldProduct);
-          });
-
-          alert("Image uploaded successfully!");
-        } catch (error) {
-          console.error("Error saving to Firestore:", error);
-        } finally {
-          setProgress(0);
-          setImage(null);
-          setUploading(false);
-        }
-      }
-    );
   };
 
   const handleSubmit = (e, isAdmin, productDetails) => {
@@ -215,32 +208,45 @@ const productId = () => {
       setUserEmail(decodedData.user.email);
     }
   }, []);
-
-  //   department, id, image, price, productDescription, productName
-  const onCrop = (cropper) => {
-    console.log(cropper.getCoordinates(), cropper.getCanvas());
+  const onCropComplete = (croppedArea, croppedAreaPixels) => {
+    setCroppedAreaPixels(croppedAreaPixels);
+  };
+  const showCroppedImage = async () => {
+    try {
+      const croppedImage = await getCroppedImg(
+        image,
+        croppedAreaPixels,
+        rotation
+      );
+      console.log("donee", { croppedImage });
+      setCroppedImage(croppedImage);
+      handleUpload(croppedImage);
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   return (
     <>
-      {console.log(image)}
-{   image &&   <FixedCropper
-        src={image}
-        stencilSize={{
-          width: 280,
-          height: 280,
-        }}
-        className={"cropper"}
-        imageRestriction={ImageRestriction.stencil}
-      />}
-      {/* {image && (
-        <Cropper
-          src={image}
-          onChange={onCrop}
-          className={"cropper"}
-          style={{ height: "300px" }}
-        />
-      )} */}
+      {image && (
+        <>
+          <Cropper
+            image={image}
+            crop={crop}
+            zoom={zoom}
+            aspect={4 / 3}
+            onCropChange={setCrop}
+            onCropComplete={onCropComplete}
+            onZoomChange={setZoom}
+          />
+          <button
+            onClick={showCroppedImage}
+            className="absolute transform -translate-x-1/2 -translate-y-1/2 bottom-36 bg-black px-4 py-2 rounded-md left-1/2"
+          >
+            Upload
+          </button>
+        </>
+      )}
       <div className="p-5 m-5 text-white bg-white">
         <ToastContainer />
         <form className="grid justify-center ">
