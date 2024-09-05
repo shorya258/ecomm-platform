@@ -12,10 +12,9 @@ const requestId = () => {
   const [email, setEmail] = useState("");
   const [pendingProduct, setPendingProduct] = useState([]);
   const [status, setStatus] = useState("pending");
-  const [highlightedValues, setHighlightedValues] = useState([])
+  const [highlightedValues, setHighlightedValues] = useState([]);
   const setChangeStatus = async (changedStatus) => {
-    console.log("status changed to",changedStatus);
-
+    console.log("status changed to", changedStatus);
     const response = await fetch(`/api/changeReviewStatus`, {
       method: "PUT",
       headers: {
@@ -32,7 +31,7 @@ const requestId = () => {
     if (statusCode === 201) {
       toast.success("product ", changedStatus);
       setStatus(changedStatus);
-      router.push("/dashboard",{ replace: true });
+      router.push("/dashboard", { replace: true });
     }
     console.log(json);
   };
@@ -41,24 +40,24 @@ const requestId = () => {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-      }
+      },
     });
     const res = await response.json();
     const statusCode = response.status;
     console.log(res.productUpdations, "productUpdations");
     if (statusCode === 201) {
       console.log(pendingProduct);
-      res.productUpdations.forEach(productUpdation => {
-        console.log(productUpdation.product , pendingProduct.product);
-        if(productUpdation.product === pendingProduct.product) {
+      res.productUpdations.forEach((productUpdation) => {
+        console.log(productUpdation.product, pendingProduct.product);
+        if (productUpdation.product === pendingProduct.product) {
           setHighlightedValues(productUpdation.changedKeys);
         }
-      })
+      });
     }
-  }
+  };
   useEffect(() => {
-    fetchProductUpdations()
-  },[pendingProduct])
+    fetchProductUpdations();
+  }, [pendingProduct]);
   useEffect(() => {
     const requestString = searchParams.get("request");
     let decodedPendingProduct = null;
@@ -66,13 +65,14 @@ const requestId = () => {
       try {
         decodedPendingProduct = JSON.parse(decodeURIComponent(requestString));
         console.log(decodedPendingProduct.image);
-        decodedPendingProduct.image =
-          decodedPendingProduct.image.replace(
-            "images/",
-            "images%2F"
-          );
-        decodedPendingProduct.image =
-          decodedPendingProduct.image.replace(" ", "%20");
+        decodedPendingProduct.image = decodedPendingProduct.image.replace(
+          "images/",
+          "images%2F"
+        );
+        decodedPendingProduct.image = decodedPendingProduct.image.replace(
+          " ",
+          "%20"
+        );
         console.log(decodedPendingProduct.image);
         setPendingProduct(decodedPendingProduct);
       } catch (e) {
@@ -83,11 +83,11 @@ const requestId = () => {
   const checkHighlighted = (value) => {
     console.log(highlightedValues);
     console.log(value);
-    highlightedValues.forEach(values => {
-      console.log(values === value)
-    })
+    highlightedValues.forEach((values) => {
+      console.log(values === value);
+    });
     return highlightedValues.includes(value);
-  }
+  };
   useEffect(() => {
     let authStorageToken = localStorage.getItem("authStorageToken");
     const decodedData = jwtDecode(authStorageToken);
@@ -101,11 +101,11 @@ const requestId = () => {
   // },[status])
 
   return (
-    <div className="p-5 m-5 text-white bg-white">
+    <div className="p-5 m-5 grid justify-center">
       <ToastContainer />
       {/* {pendingProduct.productDetails?.productName} */}
-      <div>
-        <form className="grid justify-center ">
+      <div className="grid justify-center bg-white rounded-xl p-10 ">
+        <form className="grid justify-center text-gray-600 ">
           <div className="space-y-12">
             <div className="border-b border-gray-900/10 pb-12">
               <h2 className="font-semibold leading-7 text-gray-900 text-3xl ">
@@ -115,71 +115,74 @@ const requestId = () => {
                 <p> Approve or reject changes done to this product! </p>
               </div>
 
-              <div className="mt-10 flex flex-row ">
-                <div className="col-span-full mr-10 flex flex-col ">
-                  <label
-                    htmlFor="photo"
-                    className="block text-xl font-medium leading-6 text-gray-900"
-                  >
-                    Photo
-                  </label>
-                  <div className="mt-2 flex flex-col items-center gap-x-3">
+              <div className="grid grid-rows-1 " >
+              <div className="mt-10 flex flex-col items-center gap-x-3">
                     <div className="max-w-[200px] overflow-hidden h-auto ">
-                      {/* <Image src={product?.image} alt="product" width={200} height={200} /> */}
                       <img
                         src={pendingProduct.image}
-                        className={checkHighlighted("productImage") ? `rounded-md border border-yellow-500` : ""}
+                        className={
+                          checkHighlighted("productImage")
+                            ? `rounded-md border border-yellow-500`
+                            : ""
+                        }
                         alt="product"
                       />
-
-                      {/* {pendingProduct.productDetails.image} */}
                     </div>
-                    {/* <UserCircleIcon aria-hidden="true" className="h-12 w-12 text-gray-300" /> */}
                   </div>
-                </div>
-                <div className=" grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-                  <div className={checkHighlighted("productName") ? `rounded-md border border-yellow-500 bor sm:col-span-4` : "sm:col-span-4"}>
+
+              <div className="mt-10 flex flex-col ">
+                
+                <div className=" grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 md:grid-rows-1">
+                  <div className="sm:col-span-4 flex items-center">
                     <label
                       htmlFor="productName"
-                      className="block text-xl font-medium leading-6 text-gray-900"
+                      className="block text-xl font-medium leading-6 text-gray-900 mr-2"
                     >
                       Name
                     </label>
-                    <div className="mt-2 text-black ">
+                    <div className="lock text-xl font-medium leading-6 text-gray-600">
                       {pendingProduct.productName}
                     </div>
                   </div>
+                </div>
+                <div className="sm:col-span-4 flex items-center">
+                  <label
+                    htmlFor="price"
+                    className="block text-xl font-medium leading-6 text-gray-900 mr-2"
+                  >
+                    Price 
+                  </label>
+                  <div className="lock text-xl font-medium leading-6 text-gray-600">${pendingProduct.price}</div>
+                </div>
+                <div className="sm:col-span-4 flex items-center">
+                  <label
+                    htmlFor="price"
+                    className="block text-xl font-medium leading-6 text-gray-900 mr-2"
+                  >
+                    Department
+                  </label>
+                  <div className="lock text-xl font-medium leading-6 text-gray-600">{pendingProduct.department}</div>
 
-                  <div className={checkHighlighted("productDescription") ? `rounded-md border border-yellow-500 sm:col-span-4` : "sm:col-span-4"}>
+                 
+                </div>
+              </div>
+              <div className="col-span-full flex items-center text-wrap flex-wrap">
                     <label
                       htmlFor="productDescription"
-                      className="block text-xl font-medium leading-6 text-gray-900"
+                      className="block text-xl font-medium leading-6 text-gray-900 mr-2"
                     >
                       About
                     </label>
-                    <div className="mt-2 text-black">
+                    <div className="lock text-xl font-medium leading-6 text-gray-600">
                       {pendingProduct.productDescription}
                     </div>
                     {/* <p className="mt-3 text-sm leading-6 text-gray-600">Write a few sentences about yourself.</p> */}
                   </div>
-                  <div className={checkHighlighted("price") ? `rounded-md border border-yellow-500 sm:col-span-4` : "sm:col-span-4"}>
-                    <label
-                      htmlFor="price"
-                      className="block text-xl font-medium leading-6 text-gray-900"
-                    >
-                      Price 
-                    </label>
-                    <div className="mt-2 text-black">
-                      ${pendingProduct.price}
-                    </div>
-                    {/* <p className="mt-3 text-sm leading-6 text-gray-600">Write a few sentences about yourself.</p> */}
-                  </div>
-                </div>
               </div>
             </div>
           </div>
 
-          <div className="flex flex-row justify-center mt-4" >
+          <div className="flex flex-row justify-center mt-4">
             <button
               onClick={() => setChangeStatus("approved")}
               className="inline-flex items-center mr-5 px-3 py-2 text-sm font-medium text-center text-white bg-indigo-700 rounded-lg hover:bg-indigo-800 focus:ring-4 focus:outline-none focus:ring-indigo-300 dark:bg-indigo-600 dark:hover:bg-indigo-700 dark:focus:ring-indigo-800"
