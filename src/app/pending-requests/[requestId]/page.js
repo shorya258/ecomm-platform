@@ -13,8 +13,9 @@ const requestId = () => {
   const [pendingProduct, setPendingProduct] = useState([]);
   const [status, setStatus] = useState("pending");
   const [highlightedValues, setHighlightedValues] = useState([]);
-  const setChangeStatus = async (changedStatus) => {
-    // //console.log("status changed to", changedStatus);
+  const setChangeStatus = async (e,changedStatus) => {
+    e.preventDefault();
+    console.log("HITTTT");
     const response = await fetch(`/api/changeReviewStatus`, {
       method: "PUT",
       headers: {
@@ -26,12 +27,14 @@ const requestId = () => {
         status: changedStatus,
       }),
     });
+    console.log(response, "response");
     const json = await response.json();
     const statusCode = response.status;
     if (statusCode === 201) {
       toast.success("product ", changedStatus);
       setStatus(changedStatus);
-      router.push("/dashboard", { replace: true });
+      console.log(router);
+      router.replace('/pending-requests', undefined, { shallow: true });
     }
     // //console.log(json);
   };
@@ -184,7 +187,7 @@ const requestId = () => {
 
           <div className="flex flex-row justify-center mt-4">
             <button
-              onClick={() => setChangeStatus("approved")}
+              onClick={(e) => setChangeStatus(e,"approved")}
               className="inline-flex items-center mr-5 px-3 py-2 text-sm font-medium text-center text-white bg-indigo-700 rounded-lg hover:bg-indigo-800 focus:ring-4 focus:outline-none focus:ring-indigo-300 dark:bg-indigo-600 dark:hover:bg-indigo-700 dark:focus:ring-indigo-800"
             >
               Approve
@@ -205,7 +208,7 @@ const requestId = () => {
               </svg>
             </button>
             <button
-              onClick={() => setChangeStatus("rejected")}
+              onClick={(e) => setChangeStatus(e,"rejected")}
               className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-red-700 rounded-lg hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800"
             >
               Reject
