@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 
 export async function POST(req) {
-console.log("login hit")
+// console.log("login hit")
   const { token } = req.query;
 
   if (!token) {

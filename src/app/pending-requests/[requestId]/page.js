@@ -14,7 +14,7 @@ const requestId = () => {
   const [status, setStatus] = useState("pending");
   const [highlightedValues, setHighlightedValues] = useState([]);
   const setChangeStatus = async (changedStatus) => {
-    console.log("status changed to", changedStatus);
+    // //console.log("status changed to", changedStatus);
     const response = await fetch(`/api/changeReviewStatus`, {
       method: "PUT",
       headers: {
@@ -33,7 +33,7 @@ const requestId = () => {
       setStatus(changedStatus);
       router.push("/dashboard", { replace: true });
     }
-    console.log(json);
+    // //console.log(json);
   };
   const fetchProductUpdations = async () => {
     const response = await fetch(`/api/productUpdation`, {
@@ -44,11 +44,11 @@ const requestId = () => {
     });
     const res = await response.json();
     const statusCode = response.status;
-    console.log(res.productUpdations, "productUpdations");
+    ////console.log(res.productUpdations, "productUpdations");
     if (statusCode === 201) {
-      console.log(pendingProduct);
+      ////console.log(pendingProduct);
       res.productUpdations.forEach((productUpdation) => {
-        console.log(productUpdation.product, pendingProduct.product);
+        //console.log(productUpdation.product, pendingProduct.product);
         if (productUpdation.product === pendingProduct.product) {
           setHighlightedValues(productUpdation.changedKeys);
         }
@@ -64,7 +64,7 @@ const requestId = () => {
     if (requestString) {
       try {
         decodedPendingProduct = JSON.parse(decodeURIComponent(requestString));
-        console.log(decodedPendingProduct.image);
+        //console.log(decodedPendingProduct.image);
         decodedPendingProduct.image = decodedPendingProduct.image.replace(
           "images/",
           "images%2F"
@@ -73,25 +73,25 @@ const requestId = () => {
           " ",
           "%20"
         );
-        console.log(decodedPendingProduct.image);
+        //console.log(decodedPendingProduct.image);
         setPendingProduct(decodedPendingProduct);
       } catch (e) {
-        console.error("Error parsing product data:", e);
+        //console.error("Error parsing product data:", e);
       }
     }
   }, []);
   const checkHighlighted = (value) => {
-    console.log(highlightedValues);
-    console.log(value);
+    //console.log(highlightedValues);
+    //console.log(value);
     highlightedValues.forEach((values) => {
-      console.log(values === value);
+      //console.log(values === value);
     });
     return highlightedValues.includes(value);
   };
   useEffect(() => {
     let authStorageToken = localStorage.getItem("authStorageToken");
     const decodedData = jwtDecode(authStorageToken);
-    // console.log(decodedData);
+    // //console.log(decodedData);
     // fetchPendingProducts(decodedData.user.email, "admin");
     setEmail(decodedData.user.email);
   }, []);

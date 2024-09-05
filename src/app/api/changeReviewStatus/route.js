@@ -6,7 +6,7 @@ export async function PUT(req) {
     try {
       const body = await req.json();
       const { review, adminEmail, status} = body;
-      console.log("review",review);
+      // console.log("review",review);
       if (!review._id || !review.product || !adminEmail || !status ) {
         return NextResponse.json(
           { error: "Missing review fields", review, adminEmail, status},{ status: 400 }

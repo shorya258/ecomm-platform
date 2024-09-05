@@ -2,7 +2,7 @@ import { Resend } from 'resend';
 import jwt from 'jsonwebtoken';
 import { NextResponse } from "next/server";
 
-console.log(process.env.EMAIL_USER, process.env.EMAIL_PASS , "creds");
+// console.log(process.env.EMAIL_USER, process.env.EMAIL_PASS , "creds");
 const resend = new Resend('re_3YKKHEbA_GZuZCfXP5jRY91EguQjJJZH3');
 
 export async function POST(req) {
@@ -14,13 +14,13 @@ export async function POST(req) {
       { status: 400 }
     );
   }
-  console.log(email);
+  // console.log(email);
   // Create a token with a secret key
   const token = jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: '1h' });
-  console.log(token);
+  // console.log(token);
   // Construct the magic link
   const magicLink = `${process.env.API_URL}/api/oneTimeLogin/?token=${token}`;
-  console.log(magicLink);
+  // console.log(magicLink);
 
   try {
     resend.emails.send({

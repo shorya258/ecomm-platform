@@ -167,21 +167,27 @@ const Profile = () => {
       <div className="flex flex-row gap-3 max-w-0.8 border-b border-white pb-2">
         <button
           onClick={(e) => handleRequestsFilter(e, "pending")}
-          className={`${showRequests==="pending"?"bg-indigo-500 ":"bg-indigo-600"}flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 `}
+          className={`flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 
+            ${showRequests === "pending" ? "bg-indigo-500 " : "bg-indigo-600"}
+            `}
         >
           Pending Requests{" "}
           <span className="ml-2"> {pendingProducts.length} </span>
         </button>
         <button
           onClick={(e) => handleRequestsFilter(e, "approved")}
-          className={`${showRequests==="approved"?"bg-indigo-500 ":"bg-indigo-600"}flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 `}
+          className={`flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 ${
+            showRequests === "approved" ? "bg-indigo-500 " : "bg-indigo-600"
+          }`}
         >
           Approved Requests{" "}
           <span className="ml-2"> {approvedProducts.length} </span>
         </button>
         <button
           onClick={(e) => handleRequestsFilter(e, "rejected")}
-          className={` ${showRequests==="rejected"?"bg-indigo-500 ":"bg-indigo-600"} flex w-full justify-center rounded-md  px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm bg-indigo-600 hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 `}
+          className={` flex w-full justify-center rounded-md  px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm bg-indigo-600 hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 ${
+            showRequests === "rejected" ? "bg-indigo-500 " : "bg-indigo-600"
+          } `}
         >
           Rejected Requests{" "}
           <span className="ml-2"> {rejectedProducts.length} </span>
@@ -192,8 +198,8 @@ const Profile = () => {
         {showRequests === "approved" &&
           (approvedProducts.length === 0 ? (
             <div className="text-3xl font-extrabold text-center ">
-          You have no approved products to display!
-        </div>
+              You have no approved products to display!
+            </div>
           ) : (
             <div className="flex flex-row flex-wrap">
               {approvedProducts?.map((singleProduct) => {
@@ -213,8 +219,8 @@ const Profile = () => {
         {showRequests === "pending" &&
           (pendingProducts.length === 0 ? (
             <div className="text-3xl font-extrabold text-center ">
-          You have no pending products to display!
-        </div>
+              You have no pending products to display!
+            </div>
           ) : (
             <div className="flex flex-row flex-wrap ">
               {pendingProducts?.map((singleProduct) => {
@@ -234,8 +240,8 @@ const Profile = () => {
         {showRequests === "rejected" &&
           (rejectedProducts.length === 0 ? (
             <div className="text-3xl font-extrabold text-center ">
-          You have no rejected products to display!
-        </div>
+              You have no rejected products to display!
+            </div>
           ) : (
             <div className="flex flex-row flex-wrap ">
               {rejectedProducts?.map((singleProduct) => {

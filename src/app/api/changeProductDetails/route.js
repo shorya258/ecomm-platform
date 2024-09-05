@@ -9,7 +9,7 @@ export async function PUT(req) {
   try {
     const body = await req.json();
     const { product} = body;
-    console.log("product",product);
+    // console.log("product",product);
     if (!product._id || !product.productName ) {
       return NextResponse.json(
         { error: "Missing required fields"},{ status: 400 }

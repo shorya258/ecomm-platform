@@ -27,17 +27,17 @@ export async function POST(req) {
     });
 
     await newReview.save();
-    console.log(productDetails, "productDetails")
+    // console.log(productDetails, "productDetails")
 
     const keys = Object.keys(Product.schema.paths);
-    console.log(keys , "keys")
+    // console.log(keys , "keys")
     let changedValuesList = []
     keys.forEach(key => {
       if(oldProduct[key] != productDetails[key]) {
         changedValuesList.push(key);
       }
     })
-    console.log(changedValuesList);
+    // console.log(changedValuesList);
     createProductUpdationByDetails(oldProduct, changedValuesList)
     return NextResponse.json(
       { message: "product for review successfully" }, { status: 201 }
@@ -52,13 +52,13 @@ export async function POST(req) {
 async function createProductUpdationByDetails(product , changedValuesList) {
   try {
       
-      console.log(product, changedValuesList);
+      // console.log(product, changedValuesList);
       await connectToDatabase();
-      console.log("existingProductUpdation1");
+      // console.log("existingProductUpdation1");
       const existingProductUpdation = await ProductUpdation.findOne({
           product : product._id
       });
-      console.log(existingProductUpdation, "existingProductUpdation");
+      // console.log(existingProductUpdation, "existingProductUpdation");
       if (existingProductUpdation) {
         existingProductUpdation.changedKeys = [
           ...new Set([

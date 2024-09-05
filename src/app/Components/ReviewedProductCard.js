@@ -24,7 +24,7 @@ const ReviewedProductCard = ({ singleProduct, user, requestStatus,email,fetchAll
     if(statusCode===201){
         setStatus(changedStatus);
     }
-    console.log(json);
+    // console.log(json);
 
   };
 

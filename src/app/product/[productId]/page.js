@@ -73,7 +73,7 @@ const productId = () => {
       oldProduct.image = downloadURL;
       setProduct(oldProduct);
       setImage(null);
-      console.log("File uploaded and URL saved successfully:", downloadURL);
+      // console.log("File uploaded and URL saved successfully:", downloadURL);
     } catch (error) {
       console.error("Error uploading file:", error);
     }
@@ -101,7 +101,7 @@ const productId = () => {
       toast.error("Make some changes to the values first!");
       return;
     }
-    console.log("handleSaveChanges called", product);
+    //console.log("handleSaveChanges called", product);
 
     const response = await fetch(`/api/changeProductDetails`, {
       method: "PUT",
@@ -116,7 +116,7 @@ const productId = () => {
     console.log(json);
     const statusCode = response.status;
 
-    console.log(json.status);
+    //console.log(json.status);
     if (statusCode === 201) {
       toast.success("Item added for review!");
       router.push("/dashboard");
@@ -151,7 +151,7 @@ const productId = () => {
       toast.error("Make some changes to the values first!");
       return;
     }
-    console.log("handleSaveForReview called", userEmail);
+    //console.log("handleSaveForReview called", userEmail);
     const response = await fetch(`/api/productForReview`, {
       method: "POST",
       headers: {
@@ -165,10 +165,10 @@ const productId = () => {
       }),
     });
     const json = await response.json();
-    console.log(json);
+    //console.log(json);
     const statusCode = response.status;
 
-    console.log(json.status);
+    //console.log(json.status);
     if (statusCode === 201) {
       toast.success("Item added for review!");
       router.push("/dashboard");
@@ -180,7 +180,7 @@ const productId = () => {
   };
 
   const onChange = (e) => {
-    console.log(e.target.name, e.target.value);
+    //console.log(e.target.name, e.target.value);
     setProduct({ ...product, [e.target.name]: e.target.value });
   };
   const src = product.image;
@@ -191,13 +191,13 @@ const productId = () => {
     if (productString) {
       try {
         decodedProduct = JSON.parse(decodeURIComponent(productString));
-        console.log(decodedProduct.productName);
-        console.log(decodedProduct.image);
+        //console.log(decodedProduct.productName);
+        //console.log(decodedProduct.image);
         decodedProduct.image = decodedProduct.image.replace(
           "images/",
           "images%2F"
         );
-        console.log(decodedProduct.image);
+        //console.log(decodedProduct.image);
         setInitialProduct(decodedProduct);
         setProduct(decodedProduct);
       } catch (e) {
@@ -225,7 +225,7 @@ const productId = () => {
         croppedAreaPixels,
         rotation
       );
-      console.log("donee", { croppedImage });
+      //console.log("donee", { croppedImage });
       setCroppedImage(croppedImage);
       handleUpload(croppedImage);
     } catch (e) {
