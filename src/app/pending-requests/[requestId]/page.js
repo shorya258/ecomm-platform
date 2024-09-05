@@ -140,7 +140,7 @@ const requestId = () => {
                     >
                       Name
                     </label>
-                    <div className="lock text-xl font-medium leading-6 text-gray-600">
+                    <div className={`${checkHighlighted("productName") ?"border-yellow-300 border-2 border-solid rounded-lg":"" }lock text-xl font-medium leading-6 text-gray-600`}>
                       {pendingProduct.productName}
                     </div>
                   </div>
@@ -152,7 +152,7 @@ const requestId = () => {
                   >
                     Price 
                   </label>
-                  <div className="lock text-xl font-medium leading-6 text-gray-600">${pendingProduct.price}</div>
+                  <div className={`${checkHighlighted("price") ?"border-yellow-300 border-2 border-solid rounded-lg":"" }lock text-xl font-medium leading-6 text-gray-600`}>${pendingProduct.price}</div>
                 </div>
                 <div className="sm:col-span-4 flex items-center">
                   <label
@@ -161,7 +161,7 @@ const requestId = () => {
                   >
                     Department
                   </label>
-                  <div className="lock text-xl font-medium leading-6 text-gray-600">{pendingProduct.department}</div>
+                  <div className={`${checkHighlighted("department") ?"border-yellow-300 border-2 border-solid rounded-lg":"" }lock text-xl font-medium leading-6 text-gray-600`}>{pendingProduct.department}</div>
 
                  
                 </div>
@@ -173,7 +173,7 @@ const requestId = () => {
                     >
                       About
                     </label>
-                    <div className="lock text-xl font-medium leading-6 text-gray-600">
+                    <div className={`${checkHighlighted("productDescription") ?"border-yellow-300 border-2 border-solid rounded-lg":"" }lock text-xl font-medium leading-6 text-gray-600`}>
                       {pendingProduct.productDescription}
                     </div>
                     {/* <p className="mt-3 text-sm leading-6 text-gray-600">Write a few sentences about yourself.</p> */}
