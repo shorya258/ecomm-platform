@@ -167,8 +167,8 @@ const Profile = () => {
       <div className="flex flex-row gap-3 max-w-0.8 border-b border-white pb-2">
         <button
           onClick={(e) => handleRequestsFilter(e, "pending")}
-          className={`flex w-full justify-center rounded-md  px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 
-            ${showRequests === "pending" ? "bg-indigo-500 " : "bg-indigo-600"}
+          className={`flex w-full justify-center rounded-md  px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm bg-indigo-600 hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 
+            ${showRequests === "pending" ? "border-solid border-2 border-white" : ""}
             `}
         >
           Pending Requests{" "}
@@ -176,8 +176,8 @@ const Profile = () => {
         </button>
         <button
           onClick={(e) => handleRequestsFilter(e, "approved")}
-          className={`flex w-full justify-center rounded-md  px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 ${
-            showRequests === "approved" ? "bg-indigo-500 " : "bg-indigo-600"
+          className={`flex w-full justify-center rounded-md  px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm bg-indigo-600  bg-indigo-600hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 ${
+            showRequests === "approved" ? "border-solid border-2 border-white " : ""
           }`}
         >
           Approved Requests{" "}
@@ -185,8 +185,8 @@ const Profile = () => {
         </button>
         <button
           onClick={(e) => handleRequestsFilter(e, "rejected")}
-          className={` flex w-full justify-center rounded-md  px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm  hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 ${
-            showRequests === "rejected" ? "bg-indigo-500 " : "bg-indigo-600"
+          className={` flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm  hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 ${
+            showRequests === "rejected" ? "border-solid border-2 border-white " : ""
           } `}
         >
           Rejected Requests{" "}
